@@ -1,0 +1,216 @@
+{% extends "admintemplates/adminbase.html" %}
+{% load static %}
+{% block title %}
+Organization Detail
+{% endblock %}
+{% block organization %}
+active
+{% endblock %}
+{% block content %}
+<div class="block-header py-2">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <h2>
+                <!-- <a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a>  -->
+                Organization Info <a href="{% url 'ecomapp:adminorganizationupdate' org.id %}"
+                    class="btn btn-success btn-sm"><i class="fa fa-edit"> Update</i></a>
+                <ul class="breadcrumb" style="float: right; font-size: 0.7em;">
+                    <li class="breadcrumb-item"><a href="{% url 'ecomapp:adminhome' %}"><i class="icon-home"></i></a>
+                    </li>
+                    <li class="breadcrumb-item active">Orgganization info</li>
+                </ul>
+            </h2>
+        </div>
+    </div>
+</div>
+<div class="row clearfix">
+    {% if not org.slogan %}
+    <div class="col-lg-12">
+        <div class="card">
+            <h1 style="font-size: 2em; text-align: center;" class="py-3">{{org.name}}</h1>
+        </div>
+    </div>
+    {% endif %}
+    <div class="col-lg-4 col-md-12">
+        <div class="card profile-header">
+            <div class="body">
+                <div class="profile-image"> <img src="{{org.logo.url}}" class="rounded-circle" alt="{{org.name}}"
+                        style="width: 100%; height: 100px; object-fit: contain;"> </div>
+                <div>
+                    <figure style="text-align: center; margin-top: 5px;">Fig: Company Logo</figure>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="header">
+                <h2>Info</h2>
+            </div>
+            <div class="body">
+                <small class="text-muted">Address: </small>
+                <p>{{org.address}}</p>
+                <div>
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1923731.7533500232!2d-120.39098936853455!3d37.63767091877441!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80859a6d00690021%3A0x4a501367f076adff!2sSan+Francisco%2C+CA%2C+USA!5e0!3m2!1sen!2sin!4v1522391841133"
+                        width="100%" height="150" frameborder="0" style="border:0" allowfullscreen></iframe>
+                </div>
+                <small class="text-muted">Email address: </small>
+                <p>{{org.email}}<br>{{org.alt_email}}</p>
+                <small class="text-muted">Mobile: </small>
+                <p>{{org.contact_no}}, {{org.alt_contact_no}}</p>
+                <hr>
+                <small class="text-muted">Social: </small>
+                <p><i class="fa fa-facebook  m-r-5"></i> <a href='//{{org.facebook|default_if_none:"www.facebook.com"}}'
+                        target="_blank">{{org.facebook|default_if_none:"www.facebook.com"}}</a></p>
+                <p><i class="fa fa-youtube m-r-5"></i> <a href='//{{org.youtube|default_if_none:"www.youtube.com"}}'
+                        target="_blank">{{org.youtube|default_if_none:"www.youtube.com"}}</a></p>
+                <p><i class="fa fa-instagram m-r-5"></i> <a
+                        href='//{{org.instagram|default_if_none:"www.instagram.com"}}'
+                        target="_blank">{{org.instagram|default_if_none:"www.instagram.com"}}</a></p>
+                <p><i class="fa fa-twitter m-r-5"></i> <a href='//{{org.twitter|default_if_none:"www.twitter.com"}}'
+                        target="_blank">{{org.twitter|default_if_none:"www.twitter.com"}}</a></p>
+                <!-- <p><i class="fa fa-viber m-r-5"></i> <a href='//{{org.viber|default_if_none:"www.viber.com"}}' target="_blank">{{org.viber|default_if_none:"www.viber.com"}}</a></p> -->
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8 col-md-12">
+        <div class="card">
+            <div class="body">
+                <div class="row">
+                    {% if org.profile_image %}
+                    <div class="{% if org.slogan %}col-md-4{% else %}col-md-6 offset-md-3{% endif %}">
+                        <img src="{{org.profile_image.url}}" style="height: 200px; width: 100%; object-fit: contain;">
+                        {% if not org.slogan %}<figure style="text-align: center; margin-top: 5px;">Fig: Company Profile
+                            Image</figure>{% endif %}
+                    </div>
+                    {% endif %}
+                    <div class="col-md-8">
+                        {% if org.slogan %}
+                        <h1 style="font-size: 2em;">{{org.name}}</h1>
+                        <br>
+                        <h5>Our Slogan:</h5>
+                        <h5>{{org.slogan|safe}}</h5>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--         <div class="card">
+            <div class="row profile_state">
+                <div class="col-lg-3 col-6">
+                    <div class="body">
+                        <i class="fa fa-thumbs-up"></i>
+                        <h5 class="m-b-0 number count-to" data-from="0" data-to="2365" data-speed="1000" data-fresh-interval="700">2365</h5>
+                        <small>Experience</small>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="body">
+                        <i class="fa fa-star"></i>
+                        <h5 class="m-b-0 number count-to" data-from="0" data-to="1203" data-speed="1000" data-fresh-interval="700">1203</h5>
+                        <small>Awards</small>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="body">
+                        <i class="fa fa-user"></i>
+                        <h5 class="m-b-0 number count-to" data-from="0" data-to="324" data-speed="1000" data-fresh-interval="700">324</h5>
+                        <small>Clients</small>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="body">
+                        <i class="fa fa-bug"></i>
+                        <h5 class="m-b-0 number count-to" data-from="0" data-to="1980" data-speed="1000" data-fresh-interval="700">1980</h5>
+                        <small>Surgery</small>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="card">
+            <div class="body">
+                <ul class="nav nav-tabs-new">
+                    <li class="nav-item m-1"><a class="nav-link active" data-toggle="tab" href="#Basic">Basic</a></li>
+                    <li class="nav-item m-1"><a class="nav-link" data-toggle="tab" href="#Account">Our Policies</a></li>
+                    <li class="nav-item m-1"><a class="nav-link" data-toggle="tab" href="#General">Terms Conditions</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="tab-content padding-0">
+            <div class="tab-pane active" id="Basic">
+                <div class="card">
+                    <div class="body">
+                        {% if org.meta_description %}
+                        <h6>Meta Description</h6>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12">
+                                {{org.meta_description|striptags|safe}}
+                            </div>
+                        </div>
+                        <div class="mt-5">
+                            <hr>
+                        </div>
+                        {% endif %}
+                        <h6>Basic Information</h6>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12">
+                                {{org.about_us|safe}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="Account">
+                <div class="card">
+                    <div class="body">
+                        <h6>Seller Policy</h6>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12">
+                                {{org.seller_policy|safe}}
+                            </div>
+                        </div>
+                        <div class="mt-5">
+                            <hr>
+                        </div>
+                        <h6>Return Policy</h6>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12">
+                                {{org.return_policy|safe}}
+                            </div>
+                        </div>
+                        <div class="mt-5">
+                            <hr>
+                        </div>
+                        <h6>Support Policy</h6>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12">
+                                {{org.support_policy|safe}}
+                            </div>
+                        </div>
+                        <div class="mt-5">
+                            <hr>
+                        </div>
+                        <h6>Privary Policy</h6>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12">
+                                {{org.privacy_policy|safe}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="General">
+                <div class="card">
+                    <div class="body">
+                        <h6>Terms and Condition</h6>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12">
+                                {{org.terms_conditions|safe}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

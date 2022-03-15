@@ -1,0 +1,464 @@
+{% extends 'admintemplates/adminbase.html' %}
+{% load static %}
+{% block title %}
+Admin Home
+{% endblock %}
+{% block dashboard %}active{% endblock %}
+{% block css %}
+<style type="text/css">
+    .clickable_card_body:hover,
+    .clickable_card_body:focus {
+        background:#01b2c6;
+        color: #fff;
+        transition: 0.5s ease-out all;
+        border-radius: .55em !important;
+    }
+    #cardStyle{
+        border-radius: .55em !important;
+    }
+
+
+    @media screen and (max-width: 767px) {
+        #logoutIcon {
+            position: absolute;
+            top: 40px;
+        }
+    }
+
+    @media screen and (max-width: 320px) {
+        .navbar-fixed-top .navbar-right {
+            width: calc(100% - 50px) !important;
+        }
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="block-header py-2">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <h2>
+                <!-- <a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> -->
+                <ul class="breadcrumb" style="float: right; font-size: 0.7em;">
+                    <li class="breadcrumb-item"><a href="{% url 'ecomapp:adminhome' %}"><i class="icon-home"></i></a>
+                    </li>
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ul>
+            </h2>
+        </div>
+    </div>
+</div>
+<div class="row clearfix">
+    <div class="col-lg-2 col-md-3 clickable_card" data-href="{% url 'ecomapp:admincustomerlist' %}"
+        style="cursor: pointer;">
+        <div class="card text-center" id="cardStyle">
+            <div class="body clickable_card_body">
+                Customers
+                <br>
+                {{customercount}}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-3 clickable_card" data-href="{% url 'ecomapp:adminproductlist' %}"
+        style="cursor: pointer;">
+        <div class="card text-center" id="cardStyle">
+            <div class="body clickable_card_body">
+                Products
+                <br>
+                {{productcount}}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-3 clickable_card" data-href="{% url 'ecomapp:adminorderlist' %}?status=Pending"
+        style="cursor: pointer;">
+        <div class="card text-center" id="cardStyle">
+            <div class="body clickable_card_body">
+                Orders
+                <br>
+                {{ordercount}}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-3 clickable_card" data-href="{% url 'ecomapp:adminquotationlist' %}"
+        style="cursor: pointer;">
+        <div class="card text-center" id="cardStyle">
+            <div class="body clickable_card_body">
+                Quotations
+                <br>
+                {{quotationcount}}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-3 clickable_card" data-href="{% url 'ecomapp:adminmessagelist' %}"
+        style="cursor: pointer;">
+        <div class="card text-center" id="cardStyle">
+            <div class="body clickable_card_body">
+                Messages
+                <br>
+                {{messagecount}}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-3 clickable_card" data-href="{% url 'ecomapp:adminsuscriberlist' %}"
+        style="cursor: pointer;">
+        <div class="card text-center" id="cardStyle">
+            <div class="body clickable_card_body">
+                Subscribers
+                <br>
+                {{subscribercount}}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row clearfix">
+    <div class="col-lg-3 col-md-12">
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-6">
+                <div class="card top_counter">
+                    <div class="body">
+                        <div id="top_counter1" class="carousel vert slide" data-ride="carousel" data-interval="2500">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <div class="icon"><i class="fa fa-cart-plus"></i> </div>
+                                    <div class="content">
+                                        <div class="text">Total Orders</div>
+                                        <h5 class="number">{{ordercount}}</h5>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="icon"><i class="fa fa-shopping-cart"></i> </div>
+                                    <div class="content">
+                                        <div class="text">New Orders</div>
+                                        <h5 class="number">21</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div id="top_counter2" class="carousel vert slide" data-ride="carousel" data-interval="2100">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <div class="icon"><i class="fa fa-user"></i> </div>
+                                    <div class="content">
+                                        <div class="text">Subscribers</div>
+                                        <h5 class="number">{{subscribercount}}</h5>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="icon"><i class="fa fa-quote-left"></i> </div>
+                                    <div class="content">
+                                        <div class="text">Quotations</div>
+                                        <h5 class="number">{{quotationcount}}</h5>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="icon"><i class="fa fa-comments"></i> </div>
+                                    <div class="content">
+                                        <div class="text">Messages</div>
+                                        <h5 class="number">{{messagecount}}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-6">
+                <div class="card top_counter">
+                    <div class="body">
+                        <div id="top_counter3" class="carousel vert slide" data-ride="carousel" data-interval="2300">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <div class="icon"><i class="fa fa-eye"></i> </div>
+                                    <div class="content">
+                                        <div class="text">Total Visitors</div>
+                                        <h5 class="number">10K</h5>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="icon"><i class="fa fa-eye"></i> </div>
+                                    <div class="content">
+                                        <div class="text">Today Visitors</div>
+                                        <h5 class="number">142</h5>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="icon"><i class="fa fa-eye"></i> </div>
+                                    <div class="content">
+                                        <div class="text">Month Visitors</div>
+                                        <h5 class="number">2,087</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="icon"><i class="fa fa-university"></i> </div>
+                        <div class="content">
+                            <div class="text">Revenue</div>
+                            <h5 class="number">$18,925</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="col-lg-9 col-md-12">
+        <div class="card">
+            <div class="header">
+                <h2>Total Revenue</h2>
+                <ul class="header-dropdown">
+                    <li><a class="tab_btn" href="javascript:void(0);" title="Weekly">W</a></li>
+                    <li><a class="tab_btn" href="javascript:void(0);" title="Monthly">M</a></li>
+                    <li><a class="tab_btn active" href="javascript:void(0);" title="Yearly">Y</a></li>
+                </ul>
+            </div>
+            <div class="body">
+                <div class="row clearfix">
+                    <div class="col-md-4">
+                        <div class="body bg-success text-light">
+                            <h4><i class="icon-wallet"></i> 7,12,326$</h4>
+                            <span>Total Income</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="body bg-warning text-light">
+                            <h4><i class="icon-wallet"></i> 25,965$</h4>
+                            <span>Sales</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="body bg-danger text-light">
+                            <h4><i class="icon-wallet"></i> 14,965$</h4>
+                            <span>Total order</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="total_revenue" class="ct-chart m-t-20"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- tbles -->
+<div class="row clearfix">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="header">
+                <h2>Latest order 
+                    <small><a href="{% url 'ecomapp:adminorderlist' %}" style="text-decoration: none; color: #e83e8c;">View all order</a> |
+                        Latest order list with order status
+                    </small> 
+                </h2>
+            </div>
+            <div class="body">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Order Id</th>
+                                <th>Product name</th>
+                                <th>Status</th>
+                                <th>Order date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for latest_order in latestorder %}
+                            <tr>
+                                <th scope="row">{{latest_order.order_code}}</th>
+                                <td>{{latest_order.cart.product.title}}</td>
+                                <td>
+                                    {% if latest_order.order_status == 'Pending' %}
+                                    <span class="badge badge-warning">{{latest_order.order_status}}</span>
+                                    {% elif latest_order.order_status == 'Order Processing' %}
+                                    <span class="badge badge-info">{{latest_order.order_status}}</span>
+                                    {% elif latest_order.order_status == 'OnTheWay' %}
+                                    <span class="badge badge-secondary">{{latest_order.order_status}}</span>
+                                    {% elif latest_order.order_status == 'Delivered' %}
+                                    <span class="badge badge-success">{{latest_order.order_status}}</span>
+                                    {% elif latest_order.order_status == 'Canceled' %}
+                                    <span class="badge badge-danger">{{latest_order.order_status}}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{latest_order.placed_date}}</td>
+                            </tr>
+                            {% empty %} 
+                            <tr>
+                                <td colspan="5" class="text-center">No products added.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- Charts -->
+<div class="row clearfix">
+    <div class="col-lg-6 col-md-12">
+        <div class="card">
+            <div class="header">
+                <h2>Sales over the year</h2>
+            </div>
+            <div class="body">
+                <canvas id="bar_graph"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-12">
+        <div class="card">
+            <div class="header">
+                <h2>Order over the year</h2>
+            </div>
+            <div class="body">
+                <canvas id="line_graph"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row clearfix">
+    <div class="col-lg-6 col-md-12">
+        <div class="card">
+            <div class="header">
+                <h2>Sale comparasion</h2>
+            </div>
+            <div class="body">
+                <canvas id="line_graph_year"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-12">
+        <div class="card">
+            <div class="header">
+                <h2>Vistors statistics</h2>
+            </div>
+            <div class="body">
+                <canvas id="line_graph_year2"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+{% block js %}
+<!-- bargraph sales month wise-->
+<script>
+    var ctx = document.getElementById('bar_graph').getContext('2d');
+    var bar_graph = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep','Oct','Nov','Dec'],
+            datasets: [{
+                label: 'Sales',
+                data: [1000, 3000, 2000, 5000,6000, 4000],
+                backgroundColor: [
+                    'rgba(56,191,198)',
+                    'rgba(56,191,198)',
+                    'rgba(56,191,198)',
+                    'rgba(56,191,198)',
+                    'rgba(56,191,198)',
+                    'rgba(56,191,198)',
+                    'rgba(56,191,198)',
+                    'rgba(56,191,198)',
+                    'rgba(56,191,198)',
+                    'rgba(56,191,198)',
+                    'rgba(56,191,198)',
+                    'rgba(56,191,198)',
+                ]
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    </script>
+<!-- lien graph order month wise -->
+<script>
+    var ctx = document.getElementById('line_graph').getContext('2d');
+    var line_graph = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep','Oct','Nov','Dec'],
+            datasets: [{
+                label: 'hide',
+                data: [1, 0, 2, 5,10, 5,6,10,7,13,0,1,12],
+                borderColor: 'rgba(34,175,70)',
+                fill :false
+            
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    </script>
+
+<!-- year wise sales comparaion -->
+<script>
+    var ctx = document.getElementById('line_graph_year').getContext('2d');
+    var line_graph_year = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['2020', '2021', '2022', '2023', '2024'],
+            datasets: [{
+                label : 'Sales',
+                data: [3000, 2000, 3500, 4091, 500],
+                borderColor: 'rgba(222,72,72)',
+                fill :false
+            
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    </script>
+
+
+
+<script type="text/javascript">
+    $('.clickable_card').on('click', function () {
+        var href = $(this).data('href')
+        window.open(href)
+    })
+
+</script>
+{% endblock %}

@@ -1,0 +1,224 @@
+{% extends "admintemplates/adminbase.html" %}
+{% load static %}
+{% load humanize %}
+{% block title %}
+Order Detail
+{% endblock %}
+{% block order %}
+active
+{% endblock %}
+{% block css %}
+<style>
+    .card{
+        border-radius: .55em !important;
+    }
+</style>
+</style>
+{% endblock %}
+{% block content %}
+<div class="block- py-2">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <h2>
+            	<!-- <a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a>  -->
+            	order_{{orderobject.id}} 
+                <a class="btn btn-success btn-sm" style="margin-left: 5px;" href="{% url 'ecomapp:adminorderupdate' orderobject.id %}">
+                    <i class="fa fa-edit"></i> Update
+                </a>
+                <ul class="breadcrumb" style="float: right; font-size: 0.7em;">
+                    <li class="breadcrumb-item"><a href="{% url 'ecomapp:adminhome' %}"><i class="icon-home"></i></a></li>                            
+                    <li class="breadcrumb-item"><a href="{% url 'ecomapp:adminorderlist' %}">Order</a></li>
+                    <li class="breadcrumb-item active">Detail</li>
+	            </ul>
+            </h2>
+        </div>            
+    </div>
+</div>
+<div class="row clearfix">
+    <div class="col-lg-4 col-md-4">
+        <div class="card" style="border-radius: 0; background: rgba(119,255,255,.2)">
+            <div class="body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 style="font-size: 1.5em; padding-bottom: 0; margin-bottom: 0;">Basic Info</h1>
+                        <hr style="margin-top: 0; padding-top: 0;">
+                        <p><b>Order Code </b>: <span>{{orderobject.order_code}}</span></p>
+                        <p><b>Status </b>: <span class="badge badge-danger">{{orderobject.order_status}}</span></p>
+                        <p><b>Total </b>: <span >€.{{orderobject.nettotal|intcomma}}</span></p>
+                        <p><b>Shipping Charge </b>: <span>€.{{orderobject.shipping_charge|intcomma}}</span></p>
+                        <p><b>Payment Status </b>: <span class="badge badge-danger">{% if orderobject.customer_payment_status %}Paid{% else %}Not Paid{% endif %}</span></p>
+                    </div>
+                </div>
+            </div>          
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-4">
+        <div class="card" style="border-radius: 0; background: rgba(119,255,255,.2)">
+            <div class="body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 style="font-size: 1.5em; padding-bottom: 0; margin-bottom: 0;">Receiver Info</h1>
+                        <hr style="margin-top: 0; padding-top: 0;">
+                        <p><b>Name </b>: <span >{{orderobject.name|capfirst}}</span></p>
+                        <p><b>Contact </b>: <span >{{orderobject.mobile}}</span></p>
+                        {% if orderobject.email %}
+                        <p><b>Email </b>: <span>{{orderobject.email}}</span></p>
+                        {% endif %}
+                        {% if orderobject.region %}
+                        <p><b>Region </b>: <span>{{orderobject.region}}</span></p>
+                        {% endif %}
+                        {% if orderobject.city %}
+                        <p><b>City </b>: <span>{{orderobject.city}}</span></p>
+                        {% endif %}
+                        <p><b>Street Address </b>: <span>{{orderobject.street_address}}</span></p>
+                    </div>
+                </div>
+            </div>          
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-4">
+        <div class="card" style="border-radius: 0; background: rgba(119,255,255,.2)">
+            <div class="body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 style="font-size: 1.5em; padding-bottom: 0; margin-bottom: 0;">Take Action</h1>
+                        <hr style="margin-top: 0; padding-top: 0;">
+                        <p>Change Order Status</p>
+                        <select id="change_order_status" class="form-control mb-3">
+                            <option value="Pending" {% if orderobject.order_status == 'Pending' %}selected{% endif %}>Pending</option>
+                            <option value="Order Processing" {% if orderobject.order_status == 'Order Processing' %}selected{% endif %}>Order Processing</option>
+                            <option value="OnTheWay" {% if orderobject.order_status == 'OnTheWay' %}selected{% endif %}>On The Way</option>
+                            <option value="Delivered" {% if orderobject.order_status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                            <option value="Canceled" {% if orderobject.order_status == 'Canceled' %}selected{% endif %}>Canceled</option>
+                        </select>
+                        <button id="submit_orderstatus_change" class="btn btn-success mb-1 btn-m" style="display: none; margin-top: 0px;">
+                            <i class="fa fa-edit"></i> Update Order
+                        </button>
+                        <hr>
+                        <p>
+                            Complete order ?
+                            {% if orderobject.is_complete is True %}
+                            <span class="btn btn-success pull-right">Completed</span>
+                            {% else %}
+                            <span class="btn btn-danger pull-right">Incomplete</span>
+                            {% endif %}
+                        </p>
+                        <!-- <input type="checkbox" name="is_complete"> <label>Is Complete</label> -->
+                        
+                    </div>
+                </div>
+            </div>          
+        </div>
+    </div>
+    <div class="col-lg-12 col-md-12 mb-5">
+        <div class="card" style="border-radius: 0; background: rgba(58,156,156,.5); margin-bottom: 0;">
+            <div class="body">
+                <ul class="nav nav-tabs-new">
+                    <li class="nav-item mx-2"><a style="border:1px solid #777" class="nav-link active mx-2" data-toggle="tab" href="#Account">Products</a></li>
+                    <li class="nav-item"><a style="border:1px solid #777" class="nav-link" data-toggle="tab" href="#Basic">Order Note</a></li>
+                    <!-- <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#General">Warranty</a></li> -->
+                </ul>
+            </div>
+        </div>
+        <div class="tab-content padding-0">
+            <div class="tab-pane" id="Basic">
+                <div class="card" style="border-radius: 0; background: rgba(58,156,156,.1)">
+                    <div class="body">
+                        <p>Note</p>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12">
+                                &nbsp;&nbsp;&nbsp;{{orderobject.note}}
+                            </div>
+                        </div>
+                        <div class="mt-5"><hr></div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane active" id="Account">
+                <div class="card" style="border-radius: 0; background: rgba(58,156,156,.1)">
+                    <div class="body">
+                        <!-- <p>Return Policy</p> -->
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 60%;">Product</th>
+                                            <th style="width: 20%;">Rate x Quantity</th>
+                                            <th style="width: 20%;">Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for product in orderobject.cart.cartproduct_set.all %}
+                                        <tr>
+                                            <td><a href="" class="text-dark">{{product.product.title|capfirst}}</a></td>
+                                            <td>{{product.rate|intcomma}} x {{product.quantity}}</td>
+                                            <td>€. {{product.subtotal|intcomma}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        <tr style="border-top: 2px solid grey;">
+                                            <td colspan="2"><span class="pull-right"><b>Subtotal</b></span></td>
+                                            <td>€. {{orderobject.subtotal}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"><span class="pull-right"><b>Discount</b></span></td>
+                                            <td>€. {{orderobject.discount}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"><span class="pull-right"><b>Total</b></span></td>
+                                            <td>€. {{orderobject.total}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"><span class="pull-right"><b>Shipping Charge</b></span></td>
+                                            <td>€. {{orderobject.shipping_charge}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"><span class="pull-right"><b>Nettotal</b></span></td>
+                                            <td>€. {{orderobject.nettotal}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="tab-pane" id="General">
+                <div class="card">
+                    <div class="body">
+                        <p>Warranty</p>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12">
+                                {{orderobject.warranty|safe}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+    $('#change_order_status').on('change', function() {
+        var val = $(this).val()
+        $('#submit_orderstatus_change').css('display', 'block')
+        $('#submit_orderstatus_change').attr('data-text', val)
+    });
+    $('#submit_orderstatus_change').on('click', function() {
+        var status = $('#change_order_status').val()
+        var btn = document.getElementById('submit_orderstatus_change');
+        btn.innerHTML = "Processing...";
+        btn.disabled = true;
+        $.ajax({
+            data: {
+                status
+            },
+            success: function(){
+                location.reload()
+            }
+        })
+    })
+</script>
+{% endblock %}

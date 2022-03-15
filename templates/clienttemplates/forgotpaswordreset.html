@@ -1,0 +1,57 @@
+{% extends 'clienttemplates/clientbase.html' %}
+{% load static %}
+{% block title %}
+Forgot Password
+{% endblock %}
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<div class="container py-4 py-lg-5 my-4">
+    <div class="row">
+      <div class="col-md-12 pt-4 mt-3 mt-md-0">
+        <h2 class="h4 mb-3">Enter Your New Passord</h2>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="mb-3 password-group">
+                <label class="form-label" for="si-password">New Password</label>
+                <div class="password-group">
+                    <!-- <input type="password" class="form-control password-box" id ="forgotNewPassord" aria-label="password"> -->
+                    {{form.new_password}}
+                    <a href="#!" class="password-visibility"><i class="ci-eye"></i></a>
+                </div>
+            </div>
+            <div class="mb-3 password-group">
+                <label class="form-label" for="si-password">Conform Password</label>
+                <div class="password-group">
+                    {{form.confirm_password}}
+                    <!-- <input type="password" class="form-control password-box" id="forgotConformPassword" aria-label="password"> -->
+                    <a href="#!" class="password-visibility"><i class="ci-eye"></i></a>
+                </div>
+            </div>
+            {% if error %}
+            <p class="f-16">Error Attempt During Login</p>
+            <span style="color: red;">{{error}}</span><br><br>
+            {% endif %}
+            <button class="btn btn-primary" type="submit" id="forgotSubmit">Change Password</button>
+        </form>
+    </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block js %}
+  <!-- <script>
+      $("body").on("click", "#forgotSubmit", function(){
+          newpword = $("#id_new_password").val()
+          conformpword = $("#id_confirm_password").val()
+          if(newpword != conformpword){
+              alert("not matached")
+              $("#forgotSubmit").attr('disbaled',true)
+          }
+          else{
+              alert("matched")
+            }
+      })
+  </script> -->
+{% endblock %}

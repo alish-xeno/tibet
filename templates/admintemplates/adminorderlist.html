@@ -1,0 +1,250 @@
+{% extends "admintemplates/adminbase.html" %}
+{% load static %}
+{% load humanize %}
+{% block title %}
+Order List
+{% endblock %}
+{% block order %}
+active
+{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'adminstatic/assets/vendor/sweetalert/sweetalert.css' %}"/>
+{% endblock %}
+{% block content %}
+<div class="block-header py-2">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <h2>
+            	<!-- <a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a>  -->
+            	Orders
+            	<ul class="breadcrumb" style="float: right; font-size: 0.7em;">
+                    <li class="breadcrumb-item"><a href="{% url 'ecomapp:adminhome' %}"><i class="icon-home"></i></a></li>                            
+	                <li class="breadcrumb-item active">Order List</li>
+	            </ul>
+            </h2>
+        </div>            
+    </div>
+</div>
+<div class="row clearfix">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="header">
+                <!-- <h2> -->
+                    <!-- Orders -->
+                    <!-- <a href="" class="btn btn-success" style="float: right;">Create</a> -->
+                <!-- </h2> -->
+                <div>
+                    <a href="{% url 'ecomapp:adminorderlist' %}?status=allorders" class="btn btn-info m-1" {% if status == "allorders" %}style="box-shadow: 2px 5px #888888"{% endif %}>
+                        All orders<br>Count: {{allorderscount}}
+                    </a>
+                    <a href="{% url 'ecomapp:adminorderlist' %}?status=Pending" class="btn btn-primary m-1" {% if status == "Pending" %}style="box-shadow: 2px 5px #888888"{% endif %}>
+                        Pending orders<br>Count: {{pendingorderscount}}
+                    </a>
+                    <a href="{% url 'ecomapp:adminorderlist' %}?status=Order Processing" class="btn btn-warning m-1" {% if status == "Order Processing" %}style="box-shadow: 2px 5px #888888"{% endif %}>
+                        Processing orders<br>Count: {{processingorderscount}}
+                    </a>
+                    <a href="{% url 'ecomapp:adminorderlist' %}?status=OnTheWay" class="btn btn-secondary m-1" {% if status == "OnTheWay" %}style="box-shadow: 2px 5px #888888"{% endif %}>
+                        Intransit orders<br>Count: {{intransitorderscount}}
+                    </a>
+                    <a href="{% url 'ecomapp:adminorderlist' %}?status=Delivered" class="btn btn-success m-1" {% if status == "delivered" %}style="box-shadow: 2px 5px #888888"{% endif %}>
+                        Delivered orders<br>Count: {{deliveredorderscount}}
+                    </a>
+                    <a href="{% url 'ecomapp:adminorderlist' %}?status=Canceled" class="btn btn-danger m-1" {% if status == "failed" %}style="box-shadow: 2px 5px #888888"{% endif %}>
+                        Cancelled orders<br>Count: {{canceledorderscount}}
+                    </a>
+                </div>
+            </div>
+            <div class="body">
+                <div class="table-responsive">
+                    <div>
+                        <h5>Total: {{ordercount}}</h5>
+                    </div>
+                    <table class="table table-hover m-b-0 c_list">
+                        <thead>
+                            <tr>
+                            <!--  <th>
+                                    <label class="fancy-checkbox">
+                                        <input class="select-all" type="checkbox" name="checkbox">
+                                        <span></span>
+                                    </label>
+                                </th> -->
+                                <th style="width: 50px;">SN</th>
+                                <th style="width: 200px !important;">Order Code</th>                                    
+                                <th>Receiver</th>                                    
+                                <th style="width: 150px !important;">Total</th>
+                                <th style="width: 100px !important;">Status</th>
+                                <th style="width: 150px !important;">Action</th>
+                            </tr>
+                        </thead>
+                            <tbody>
+                                {% for order in orderlist %}
+                            <tr>
+                                <!-- <td style="width: 50px;">
+                                    <label class="fancy-checkbox">
+                                        <input class="checkbox-tick" type="checkbox" name="checkbox">
+                                        <span></span>
+                                    </label>
+                                </td> -->
+                                <td>{{forloop.counter}}</td>
+                                <td>
+                                    <p class="c_name">
+                                        <a href="{% url 'ecomapp:adminorderdetail' order.id %}" style="font-size: 1.1em;">{{order.order_code}}</a> <span class="badge {% if order.customer_payment_status %}badge-success{% else %}badge-danger{% endif %} m-l-10 hidden-sm-down">{% if order.customer_payment_status %}Paid{% else %}Not Paid{% endif %}</span>
+                                    </p>
+                                    <br>
+                                    <small style="margin-left: 10px; padding: 2px;" class="text-danger">
+                                        {{order.placed_date}}
+                                    </small>
+                                </td>
+                                <td>
+                                    {{order.name|capfirst}} {{order.last_name|capfirst}}<br>
+                                    {{order.mobile}}<br>
+                                    {% if order.email %}{{order.email}}<br>{% endif %}
+                                    {{order.street_address}}
+                                </td>
+                                <td>
+                                    €.{{order.total|intcomma}}
+                                </td>
+                                <td>
+                                    {{order.order_status}}
+                                </td>                                   
+                                <td>                                            
+                                    <a href="{% url 'ecomapp:adminorderdetail' order.id %}" class="btn btn-primary" title="Detail"><i class="fa fa-eye"></i></a>
+                                    {% comment %}
+                                    <a href="{% url 'ecomapp:adminorderupdate' order.id %}" class="btn btn-info" title="Edit"><i class="fa fa-edit"></i></a>
+                                    <button type="button" data-type="confirm" class="btn btn-danger js-sweetalert" title="Delete" data-id="{{order.id}}"><i class="fa fa-trash-o"></i></button>
+                                    {% endcomment %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">No orders on the list.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center mt-5">
+                        {% if orderlist.has_other_pages %}
+                        <ul class="pagination" style="text-align: center;">
+                            {% if orderlist.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1&status={{status}}">First</a>
+                            </li>
+                            <li>
+                                <a class="page-link" href="?page={{ orderlist.previous_page_number }}&status={{status}}" title="previous">&laquo;</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled"><a class="page-link">&laquo;</a></li>
+                            {% endif %}
+
+                            {% if orderlist.paginator.page_range|length > 10 %}
+
+                                {% for i in orderlist.paginator.page_range %}
+                                    {% if i > orderlist.number|add:'-15' and i < orderlist.number|add:'-12' %}
+                                    <li><a class="page-link" href="?page={{ i }}&status={{status}}">{{ i }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if orderlist.number > 4 %}
+                                <li><a class="page-link">...</a></li>
+                                {% endif %}
+
+                                {% for i in orderlist.paginator.page_range %}
+                                    {% if i > orderlist.number|add:'-4' and i < orderlist.number %}
+                                    <li><a class="page-link" href="?page={{ i }}&status={{status}}">{{ i }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% for i in orderlist.paginator.page_range %}
+                                    {% if orderlist.number == i %}
+                                        <li class="active"><a class="page-link">{{ i }} <span class="sr-only">(current)</span></a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% for i in orderlist.paginator.page_range %}
+                                    {% if i > orderlist.number and i < orderlist.number|add:'4' %}
+                                    <li><a class="page-link" href="?page={{ i }}&status={{status}}">{{ i }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if orderlist.number == orderlist.paginator.page_range|length or orderlist.number == orderlist.paginator.page_range|length|add:'-1' or orderlist.number == orderlist.paginator.page_range|length|add:'-2' or orderlist.number == orderlist.paginator.page_range|length|add:'-3' %}
+                                {% else %}
+                                <li><a class="page-link">...</a></li>
+                                {% endif %}
+
+                                {% for i in orderlist.paginator.page_range %}
+                                    {% if i > orderlist.number|add:'12' and i < orderlist.number|add:'15' %}
+                                    <li><a class="page-link" href="?page={{ i }}&status={{status}}">{{ i }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                            {% else %}
+
+                                {% for i in orderlist.paginator.page_range %}
+                                {% if orderlist.number == i %}
+                                    <li class="active"><a class="page-link">{{ i }} <span class="sr-only">(current)</span></a></li>
+                                {% elif i > orderlist.number|add:'-15' and i < orderlist.number|add:'15' %}
+                                    <li><a class="page-link" href="?page={{ i }}&status={{status}}">{{ i }}</a></li>
+                                {% endif %}
+                                {% endfor %}
+
+                            {% endif %}
+
+                            {% if orderlist.has_next %}
+                              <li><a class="page-link" href="?page={{ orderlist.next_page_number }}&status={{status}}" title="Next">&raquo;</a></li>
+                                <li class="page-item"><a class="page-link" href="?page={{ orderlist.paginator.num_pages }}&status={{status}}">Last</a></li>
+                            {% else %}
+                              <li class="disabled"><a class="page-link">&raquo;</a></li>
+                            {% endif %}
+                          </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+
+<script src="{% static 'adminstatic/assets/vendor/sweetalert/sweetalert.min.js' %}"></script> <!-- SweetAlert Plugin Js --> 
+<script type="text/javascript">
+    $('.js-sweetalert').on('click', function () {
+        var type = $(this).data('type');
+        var id = $(this).data('id');
+        if (type === 'confirm') {
+            showConfirmMessage(id);
+        }
+    });
+    function showConfirmMessage(id) {
+        swal({
+            title: "Are you sure?",
+            text: "You will not be able to recover this Order!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#dc3545",
+            confirmButtonText: "Yes, delete it!",
+            closeOnConfirm: false
+        }, function (isConfirm) {
+            if (isConfirm) {
+                $.ajax({
+                    data: {
+                        'id': id
+                    },
+                    success: function() {
+                        swal("Deleted!", "Order has been deleted.", "success");
+                        setTimeout(function() {
+                            location.href = "{% url 'ecomapp:adminorderlist' %}"
+                        }, 1000)
+                    }
+                })
+            } else {
+                setTimeout(function() {
+                    swal("Cancelled", "Order is safe :)", "error");
+                }, 500)
+            }
+        });
+    }
+</script>
+{% endblock %}

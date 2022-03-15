@@ -1,0 +1,101 @@
+{% extends 'clienttemplates/clientbase.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}
+Shop
+{% endblock %}
+{% block shop %}active{% endblock %}
+{% block css %}
+<style type="text/css">
+  body{
+    background: #f6f9fc;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<!-- Page Title (Light)-->
+<div class="bg-secondary py-4">
+  <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+    <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-start">
+          <li class="breadcrumb-item"><a class="text-nowrap" href="{% url 'ecomapp:clienthome' %}"><i class="ci-home"></i>Home</a></li>
+          <li class="breadcrumb-item text-nowrap active"><a href="">Shop</a>
+          </li>
+        </ol>
+      </nav>
+    </div>
+    <div class="order-lg-1 pe-lg-4 text-center text-lg-start">
+      <h1 class="h3 mb-0">Our Shop</h1>
+    </div>
+  </div>
+</div>
+<main class="container-fluid px-0">
+  {% for root in rootcategory %}
+  {% if root.category_set.all %}
+  <section class="container pt-md-3 pb-5 mb-md-3 {% if not forloop.first %}mt-5{% else %}mt-2{% endif %} card">
+    {% for subroot in root.category_set.all %}
+    {% if subroot.product_set.all %}
+    <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
+      <h2 class="h3 mb-0 pt-3 me-3">{{subroot.title|capfirst}}</h2>
+      <div class="pt-3"><a class="btn btn-outline-accent btn-sm" href="{% url 'ecomapp:clientcategorydetail' subroot.slug %}" target="_blank">More products<i class="ci-arrow-right ms-1 me-n1"></i></a></div>
+    </div>
+    <div class="tns-carousel tns-controls-static tns-controls-outside tns-nav-enabled pt-2">
+      <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;gutter&quot;: 16, &quot;controls&quot;: true, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1}, &quot;480&quot;:{&quot;items&quot;:2}, &quot;720&quot;:{&quot;items&quot;:3}, &quot;991&quot;:{&quot;items&quot;:2}, &quot;1140&quot;:{&quot;items&quot;:3}, &quot;1300&quot;:{&quot;items&quot;:4}, &quot;1500&quot;:{&quot;items&quot;:5}}}">
+        {% comment %}
+        <!-- Product-->
+        <!-- <div class="div">
+          <div class="card product-card card-static pb-3">
+            <a class="card-img-top d-block overflow-hidden" style="height: 150px; width: 100%; background: #ccc;">
+            </a>
+            <div class="card-body py-2">
+              <h3 class="product-title fs-sm text-truncate" style="height: 15px; width: 50%; background: #ccc;"></h3>
+              <div class="product-price" style="height: 20px; width: 80%; background: #ccc";>
+              </div>
+            </div>
+          </div>
+        </div>
+        -->
+        {% endcomment %}
+        {% for product in subroot.product_set.all|slice:'8' %}
+        <div>
+          <div class="card product-card card-static pb-3"><span class="badge bg-danger badge-shadow">Sale</span>
+            {% if request.user.is_authenticated and request.user.groups.first.name == "Customer" %}
+            {% if product in wishlist.products.all %}
+            <button class="btn-wishlist btn_wishlist_{{product.id}} btn-sm" data-id="{{product.id}}" id="addWishList" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="Remove from wishlist">
+              <i class="ci-heart-circle"></i>
+            </button>
+            {% else %}
+            <button class="btn-wishlist btn_wishlist_{{product.id}} btn-sm" data-id="{{product.id}}" id="addWishList" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to wishlist">
+              <i class="ci-heart"></i>
+            </button>
+            {% endif %}
+            {% else %}
+            <a class="btn-wishlist btn_wishlist_{{product.id}} btn-sm" href="#signin-modal" data-bs-toggle="modal" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to wishlist">
+              <i class="ci-heart"></i>
+            </a>
+            {% endif %}
+            <a class="card-img-top d-block overflow-hidden" href="{% url 'ecomapp:clientproductdetail' product.title product.slug %}"><img src="{% if product.display_image %}{{product.display_image.url}}{% endif %}" alt="Product" style="height: 200px; width: 100%; object-fit: cover;"></a>
+            <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="{% url 'ecomapp:clientcategorydetail' product.category.slug %}">{{product.category}}</a>
+              <h3 class="product-title fs-sm text-truncate"><a href="{% url 'ecomapp:clientproductdetail' product.title product.slug %}">{{product.title}}</a></h3>
+              <div class="product-price"><span class="text-accent">€{{product.selling_price|intcomma}}</span>
+                <del class="fs-sm text-muted">€ {{product.marked_price|intcomma}}</del>
+              </div>
+            </div>
+            <div class="product-floating-btn">
+              <option class="quantity_input" style="visibility: hidden;" value="1"></option>
+              <button class="btn btn-primary btn-sm d-block w-100 mb-2 add-to-cart" data-url="{% url 'ecomapp:ajaxcustomeraddtocart' product.id %}" type="button" title="Add to Cart"><i class="ci-cart fs-sm me-1"></i></button>
+              <!-- <button class="btn btn-primary btn-shadow btn-sm" type="button">+<i class="ci-cart fs-base ms-1"></i></button> -->
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+  </section>
+  {% endif %} 
+  {% endfor %}
+</main>
+{% endblock %}

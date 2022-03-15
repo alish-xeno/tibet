@@ -1,0 +1,6 @@
+<option value="none">Select city</option>
+{% for city in cities %}
+<option value="{{city.slug}}">{{city.title|capfirst}}</option>
+{% empty %}
+<!-- <option value="none">--unavailable--</option> -->
+{% endfor %}

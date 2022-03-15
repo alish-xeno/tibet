@@ -1,0 +1,111 @@
+<h4>Your orders</h4>
+<div class="d-sm-flex justify-content-between mt-lg-4 mb-4 pb-3 pb-sm-2">
+<!-- <div class="d-block d-sm-flex align-items-start text-center text-sm-start">
+    <div class="pt-2">
+    <h3 class="product-title fs-base mb-2"><a href="shop-single-v1.html">{{ord}}</a></h3>
+    <div class="fs-sm"><span class="text-muted me-2">Order Status: {{ord.order_status}}</span></div>
+    <div class="fs-sm"><span class="text-muted me-2">Payment Status:{% if ord.customer_payment_status == False %}<span style="color: red;"> Unpaid</span>{% else %}<span style="color: green;"> Paid</span>{% endif %}</span></div>
+    <div class="fs-sm"><span class="text-muted me-2">Shipping Cost: €.{{ord.shipping_charge}}(included)</span></div>
+    <div class="fs-lg text-accent pt-2"> €.{{ord.nettotal}}</div>
+    </div>
+</div> -->
+<table class="table">
+    <thead>
+        <tr>
+            <td>Order Id</td>
+            <td>Payment Status</td>
+            <td>Total Charges</td>
+            <td>Action</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ord in order %}
+        <tr>
+            <td><a href="{% url 'ecomapp:clientorderdetail' ord.id %}" target="_blank">{{ord}}</a></td>
+            <td>{% if ord.customer_payment_status == False %}<span style="color: red;"> Unpaid</span>{% else %}<span style="color: green;"> Paid</span>{% endif %}</span></td>
+            <td> € {{ord.nettotal}}</td>
+            <td><a href="{% url 'ecomapp:clientorderdetail' ord.id %}" target="_blank"><i class="ci-eye"></i></a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+        <!-- Pagination-->
+        <div class="col-12" style="float: center;"> 
+        <nav class="d-flex justify-content-between pt-2" aria-label="Page navigation">
+            {% if order.has_other_pages %}
+            <ul class="pagination">
+            {% if order.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">First</a>
+            </li>
+            <li>
+                <a class="page-link" href="?page={{ order.previous_page_number }}" title="previous"><i class="ci-arrow-left me-2"></i> Prev</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><a class="page-link">&laquo;</a></li>
+            {% endif %}
+            
+            {% if order.paginator.page_range|length > 10 %}
+            
+            {% for i in order.paginator.page_range %}
+            {% if i > order.number|add:'-15' and i < order.number|add:'-12' %}
+            <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+            {% endfor %}
+            
+            {% if order.number > 4 %}
+            <li><a class="page-link">...</a></li>
+            {% endif %}
+            
+            {% for i in order.paginator.page_range %}
+            {% if i > order.number|add:'-4' and i < order.number %}
+            <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+            {% endfor %}
+            
+            {% for i in order.paginator.page_range %}
+            {% if order.number == i %}
+            <li class="page-item active d-none d-sm-block" aria-current="page"><span class="page-link">{{ i }}<span class="visually-hidden">(current)</span></span></li>
+            {% endif %}
+            {% endfor %}
+            
+            {% for i in order.paginator.page_range %}
+            {% if i > order.number and i < order.number|add:'4' %}
+            <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+            {% endfor %}
+            
+            {% if order.number == order.paginator.page_range|length or order.number == order.paginator.page_range|length|add:'-1' or order.number == order.paginator.page_range|length|add:'-2' or order.number == order.paginator.page_range|length|add:'-3' %}
+            {% else %}
+            <li><a class="page-link">...</a></li>
+            {% endif %}
+            
+            {% for i in order.paginator.page_range %}
+            {% if i > order.number|add:'12' and i < order.number|add:'15' %}
+            <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+            {% endfor %}
+            
+            {% else %}
+            
+            {% for i in order.paginator.page_range %}
+                    {% if order.number == i %}
+                    <li class="page-item active d-none d-sm-block"><span class="page-link">{{ i }}<span class="visually-hidden">(current)</span></span></li>
+                    {% elif i > order.number|add:'-15' and i < order.number|add:'15' %}
+                    <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                    
+                    {% endif %}
+                    
+                    {% if order.has_next %}
+                    <li><a class="page-link" href="?page={{ order.next_page_number }}" title="Next">Next <i class="ci-arrow-right me-2"></i></a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ order.paginator.num_pages }}">Last</a></li>
+                    {% else %}
+                    <li class="page-item disabled"><a class="page-link">&raquo;</a></li>
+                    {% endif %}
+                    </ul>
+                    {% endif %}
+                </nav>
+                </div>

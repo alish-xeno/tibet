@@ -1,0 +1,212 @@
+{% extends "admintemplates/adminbase.html" %}
+{% load static %}
+{% load humanize %}
+{% block title %}
+Customer Detail
+{% endblock %}
+{% block productmains %}
+active
+{% endblock %}
+{% block product %}
+active
+{% endblock %}
+{% block content %}
+<div class="block-header py-2">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <h2>
+            	<!-- <a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a>  -->
+            	Product Detail
+            	<ul class="breadcrumb" style="float: right; font-size: 0.7em;">
+                    <li class="breadcrumb-item"><a href="{% url 'ecomapp:adminhome' %}"><i class="icon-home"></i></a></li>                            
+                    <li class="breadcrumb-item"><a href="{% url 'ecomapp:adminproductlist' %}">Product</a></li>
+                    <li class="breadcrumb-item active">Detail</li>
+	            </ul>
+            </h2>
+        </div>            
+    </div>
+</div>
+<div class="row clearfix">
+        <div class="col-lg-4 col-md-4">
+            <div class="card profile-header" style="height: 320px;">
+                <div class="body">
+                    <!-- {% if productobject.display_image %}
+                    <div class="profile-image"> <img src="{{productobject.display_image.url}}" alt="{{productobject.title}}" style="width: 100%; height: 250px; object-fit: contain;"> </div>
+                    {% endif %}
+                    <div>
+                        <figure style="text-align: center; margin-top: 5px;">Fig: Product Image</figure>
+                    </div> -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            {% if product.object.display_image %}
+                            <!-- <div id = "jssor_1" style = "position: relative; top: 0px; left: 0px; width: 290px; height: 250px; overflow: hidden;">
+                                <div data-u = "slides" style = "position: absolute; top: 0px; left: 0px; width: 290px; height: 250px; overflow: hidden;">
+                                    <div> <img data-u="image" src="{{productobject.display_image.url}}" /> </div>
+                                    <div> <img data-u="image" src="{{productobject.display_image.url}}" /> </div>                                
+                                </div>                                
+                            </div>
+                            <figure style="text-align: center; margin-top: 5px;">Fig: Product Images</figure> -->
+                            {% endif %}
+
+                            <!-- <style> -->
+                            <!-- /*for svg loding skin, place css code here*/ -->
+                            <!-- </style> -->
+                            <div id="slider1_container" style="position: relative; top: 0px; left: 0px; width: 290px; height: 250px;">
+                                <!-- Loading Screen -->
+                                <!-- <div data-u="loading" class="class-name-of-loading-skin" style="position:absolute;top:0px;left:0px;width:100%;height:100%;text-align:center;background-color:rgba(0,0,0,0.7);"> -->
+                                    <!-- your loading screen content here -->
+                                <!-- </div> -->
+                                <!-- Slides Container -->
+                                <div data-u="slides" style="cursor: move; position: absolute; overflow: hidden; left: 0px; top: 0px; width: 290px; height: 250px;">
+                                    {% if productobject.display_image %}
+                                    <div>
+                                        <img data-u="image" src="{{productobject.display_image.url}}" style="width: 100%; height: 250px; object-fit: contain; background: #ccc;" />
+                                        <div style="position: absolute; bottom: 0px; text-align: center; width: 100%; height: 30px; z-index:99999999; background: #ccc;">
+                                            <span style="background: #ccc; color: black; float: center; font-size: 1.2em;">Display Image</span>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if productobject.productimage_set.all %}
+                                    {% for pimage in productobject.productimage_set.all %}
+                                    <div>
+                                        <img data-u="image" src="{{pimage.image.url}}" style="width: 100%; height: 250px; object-fit: contain; background: #ccc;"/>
+                                        <div style="position: absolute; bottom: 0px; text-align: center; width: 100%; height: 30px; z-index:99999999; background: #ccc;">
+                                            <span style="background: #ccc; color: black; float: center; font-size: 1.2em;">Product Image {{forloop.counter}}</span>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                </div>
+                                <!-- Trigger -->
+                            </div>
+                            <!-- <figure style="text-align: center; margin-top: 5px;">Fig: Product Images</figure> -->
+                            <a href="{% url 'ecomapp:adminproductimagemanage' productobject.id %}" style="margin-top: 10px; width: 100%; text-align: center;" class="btn btn-success">Manage Product Images</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 col-md-8">
+            <div class="card">
+                <div class="body">
+                    <div class="row">
+                        <div class="col-md-12" style="height: 280px;">
+                            <h1 style="font-size: 2em;">{{productobject.title|capfirst}}</h1>
+                            <hr>
+                            <h5>Slug: <small>{{productobject.slug}}</small></h5>
+                            <h5>Product Code: <small>{{productobject.product_code}}</small></h5>
+                            <h5>Category: <small>{{productobject.category}}</small></h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Marked Price: <small>€.{{productobject.marked_price|intcomma}}</small></h5>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Selling Price: <small>€.{{productobject.selling_price|intcomma}}</small></h5>
+                                </div>
+                            </div>
+                            <h5>{% if productobject.on_sale %}<span class="text-success">On Sale</span>{% else %}<span class="text-danger">Not On Sale</span>{% endif %} | {% if productobject.is_featured %}<span class="text-success">Is Featured</span>{% else %}<span class="text-danger">Not Featured</span>{% endif %}</h5>
+                            <a class="btn btn-success btn-sm" style="bottom: 0; position: absolute;" href="{% url 'ecomapp:adminproductupdate' productobject.id %}">
+                                <i class="fa fa-edit"></i> Update
+                            </a>
+
+                        </div>
+                    </div>
+                </div>          
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 mb-5">
+            <div class="card">
+                <div class="body">
+                    <ul class="nav nav-tabs-new">
+                        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#Basic">Description</a></li>
+                        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#Account">Return Policy</a></li>
+                        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#General">Warranty</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="tab-content padding-0">
+                <div class="tab-pane active" id="Basic">
+                    <div class="card">
+                        <div class="body">
+                            {% if productobject.meta_description %}
+                            <h6>Meta Description</h6>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12">
+                                    {{productobject.meta_description|striptags|safe}}
+                                </div>
+                            </div>
+                            <div class="mt-5"><hr></div>
+                            {% endif %}
+                            <h6>Description</h6>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12">
+                                    {{productobject.description|safe}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="Account">
+                    <div class="card">
+                        <div class="body">
+                            <h6>Return Policy</h6>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12">
+                                    {{productobject.return_policy|safe}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="General">
+                    <div class="card">
+                        <div class="body">
+                            <h6>Warranty</h6>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12">
+                                    {{productobject.warranty|safe}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<!-- <script src="{% static 'adminstatic/assets/js/jssor_slider/jssor.slider.min.js' %}"></script>
+<script>
+    var options = {$AutoPlay: 1};
+    var jssor_1_slider = new $JssorSlider$("jssor_1", options);
+</script> -->
+<script src="{% static 'adminstatic/assets/js/jssor_slider/jssor.slider.min.js' %}"></script>
+<script>
+    jssor_slider1_init = function (containerId) {
+        var options = {$AutoPlay: 1};
+        var jssor_slider1 = new $JssorSlider$(containerId, options);
+        //responsive code begin
+        //remove responsive code if you don't want the slider scales
+        //while window resizing
+        function ScaleSlider() {
+            var parentWidth = $('#slider1_container').parent().width();
+            if (parentWidth) {
+                jssor_slider1.$ScaleWidth(parentWidth);
+            }
+            else
+                window.setTimeout(ScaleSlider, 30);
+        }
+        //Scale slider after document ready
+        ScaleSlider();
+                                        
+        //Scale slider while window load/resize/orientationchange.
+        $(window).bind("load", ScaleSlider);
+        $(window).bind("resize", ScaleSlider);
+        $(window).bind("orientationchange", ScaleSlider);
+        //responsive code end
+    };
+</script>
+<script>jssor_slider1_init('slider1_container');</script>
+
+{% endblock %}

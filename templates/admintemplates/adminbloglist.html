@@ -1,0 +1,230 @@
+{% extends "admintemplates/adminbase.html" %}
+{% load static %}
+{% block title %}
+Blog List
+{% endblock %}
+{% block website %}
+active
+{% endblock %}
+{% block blog %}
+active
+{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'adminstatic/assets/vendor/sweetalert/sweetalert.css' %}" />
+{% endblock %}
+{% block content %}
+<div class="block-header py-2">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <h2>
+                <!-- <a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i -->
+                        <!-- class="fa fa-arrow-left"></i></a> -->
+                Blog
+                <ul class="breadcrumb" style="float: right; font-size: 0.7em;">
+                    <li class="breadcrumb-item"><a href="{% url 'ecomapp:adminhome' %}"><i class="icon-home"></i></a>
+                    </li>
+                    <li class="breadcrumb-item active">Blog List</li>
+                </ul>
+            </h2>
+        </div>
+    </div>
+</div>
+<div class="row clearfix">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    Blog
+                    <a href="{% url 'ecomapp:adminblogcreate' %}" class="btn btn-success btn-sm"
+                        style="float: right;"><i class="fa fa-plus"></i>  Create</a>
+                </h2>
+            </div>
+            <div class="body">
+                <div class="table-responsive">
+                    <table class="table table-hover m-b-0 c_list">
+                        <thead>
+                            <tr>
+                                <!--  <th>
+                                    <label class="fancy-checkbox">
+                                        <input class="select-all" type="checkbox" name="checkbox">
+                                        <span></span>
+                                    </label>
+                                </th> -->
+                                <th>Title</th>
+                                <th>Auther</th>
+                                <!-- <th>Is Featured?</th> -->
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for blog in blogobj %}
+                            <tr>
+                                <!-- <td style="width: 50px;">
+                                    <label class="fancy-checkbox">
+                                        <input class="checkbox-tick" type="checkbox" name="checkbox">
+                                        <span></span>
+                                    </label>
+                                </td> -->
+                                <td>
+                                    {% if blog.image %}
+                                    <img src="{{blog.image.url}}" class="rounded-circle avatar" alt="">
+                                    {% endif %}
+                                    <p class="c_name">{{blog.title}}
+                                        {% if blog.is_featured %}<span
+                                            class="badge badge-default m-l-10 hidden-sm-down">featured</span>{% endif %}
+                                    </p>
+                                </td>
+                                <td>
+                                    {{blog.author}}
+                                </td>
+                                <!-- <td>
+                                    {% if blog.is_featured == True %}
+                                    <span style="color: green;">Yes</span>
+                                    {% else %}
+                                    <span style="color: red;">No</span>
+                                    {% endif %}
+                                </td> -->
+                                <td>
+                                    <a href="{% url 'ecomapp:adminblogdetail' blog.id %}" class="btn btn-primary"
+                                        title="Detail"><i class="fa fa-eye"></i></a>
+                                    <a href="{% url 'ecomapp:adminblogupdate' blog.id %}" class="btn btn-info"
+                                        title="Edit"><i class="fa fa-edit"></i></a>
+                                    <button type="button" data-type="confirm" class="btn btn-danger js-sweetalert"
+                                        title="Delete" data-id="{{blog.id}}"><i class="fa fa-trash-o"></i></button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">No Blogs added.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center mt-5">
+                        {% if page_obj.has_other_pages %}
+                        <ul class="pagination" style="text-align: center;">
+                            {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">First</a>
+                            </li>
+                            <li>
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" title="previous">&laquo;</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled"><a class="page-link">&laquo;</a></li>
+                            {% endif %}
+
+                            {% if page_obj.paginator.page_range|length > 10 %}
+
+                                {% for i in page_obj.paginator.page_range %}
+                                    {% if i > page_obj.number|add:'-15' and i < page_obj.number|add:'-12' %}
+                                    <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if page_obj.number > 4 %}
+                                <li><a class="page-link">...</a></li>
+                                {% endif %}
+
+                                {% for i in page_obj.paginator.page_range %}
+                                    {% if i > page_obj.number|add:'-4' and i < page_obj.number %}
+                                    <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% for i in page_obj.paginator.page_range %}
+                                    {% if page_obj.number == i %}
+                                        <li class="active"><a class="page-link">{{ i }} <span class="sr-only">(current)</span></a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% for i in page_obj.paginator.page_range %}
+                                    {% if i > page_obj.number and i < page_obj.number|add:'4' %}
+                                    <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if page_obj.number == page_obj.paginator.page_range|length or page_obj.number == page_obj.paginator.page_range|length|add:'-1' or page_obj.number == page_obj.paginator.page_range|length|add:'-2' or page_obj.number == page_obj.paginator.page_range|length|add:'-3' %}
+                                {% else %}
+                                <li><a class="page-link">...</a></li>
+                                {% endif %}
+
+                                {% for i in page_obj.paginator.page_range %}
+                                    {% if i > page_obj.number|add:'12' and i < page_obj.number|add:'15' %}
+                                    <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                            {% else %}
+
+                                {% for i in page_obj.paginator.page_range %}
+                                {% if page_obj.number == i %}
+                                    <li class="active"><a class="page-link">{{ i }} <span class="sr-only">(current)</span></a></li>
+                                {% elif i > page_obj.number|add:'-15' and i < page_obj.number|add:'15' %}
+                                    <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                                {% endfor %}
+
+                            {% endif %}
+
+                            {% if page_obj.has_next %}
+                              <li><a class="page-link" href="?page={{ page_obj.next_page_number }}" title="Next">&raquo;</a></li>
+                                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+                            {% else %}
+                              <li class="disabled"><a class="page-link">&raquo;</a></li>
+                            {% endif %}
+                          </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'adminstatic/assets/vendor/sweetalert/sweetalert.min.js' %}"></script>
+<!-- SweetAlert Plugin Js -->
+<script type="text/javascript">
+    $('.js-sweetalert').on('click', function () {
+        var type = $(this).data('type');
+        var id = $(this).data('id');
+        if (type === 'confirm') {
+            showConfirmMessage(id);
+        }
+    });
+    function showConfirmMessage(id) {
+        swal({
+            title: "Are you sure?",
+            text: "You will not be able to recover this blog!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#dc3545",
+            confirmButtonText: "Yes, delete it!",
+            closeOnConfirm: false
+        }, function (isConfirm) {
+            if (isConfirm) {
+                $.ajax({
+                    data: {
+                        'id': id
+                    },
+                    success: function () {
+                        swal("Deleted!", "Blog has been deleted.", "success");
+                        setTimeout(function () {
+                            location.href = "{% url 'ecomapp:adminbloglist' %}"
+                        }, 1000)
+                    }
+                })
+            } else {
+                setTimeout(function () {
+                    swal("Cancelled", "Blog is safe :)", "error");
+                }, 500)
+            }
+        });
+    }
+</script>
+{% endblock %}

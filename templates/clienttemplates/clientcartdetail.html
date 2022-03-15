@@ -1,0 +1,255 @@
+{% extends 'clienttemplates/clientbase.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}
+Cart Detail
+{% endblock %}
+
+{% block content %}
+    <!-- Page Title-->
+    <div class="page-title-overlap bg-dark pt-4">
+        <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+          <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-start">
+                <li class="breadcrumb-item"><a class="text-nowrap" href="{% url 'ecomapp:clienthome' %}"><i class="ci-home"></i>Home</a></li>
+                <!-- <li class="breadcrumb-item text-nowrap"><a href="shop-grid-ls.html">Shop</a> -->
+                <!-- </li> -->
+                <li class="breadcrumb-item text-nowrap active" aria-current="page">Cart</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="order-lg-1 pe-lg-4 text-center text-lg-start">
+            <h1 class="h3 text-light mb-0">Your cart</h1>
+          </div>
+        </div>
+      </div>
+      <div class="container pb-5 mb-2 mb-md-4">
+        <div class="row">
+          <!-- List of items-->
+          <section class="col-lg-8">
+            <div id="cart_table_section">
+              <div class="d-flex justify-content-between align-items-center pt-3 pb-4 pb-sm-5 mt-1">
+                <h2 class="h6 text-light mb-0"></h2><a class="btn btn-outline-primary btn-sm ps-2" href="{% url 'ecomapp:clienthome' %}"><i class="ci-arrow-left me-2"></i>Continue shopping</a>
+              </div>
+              <!-- Item-->
+              {% if cart %}
+              {% for product in cart.cartproduct_set.all %}
+              <div class="d-sm-flex justify-content-between align-items-center my-2 pb-3 border-bottom">
+                <div class="d-block d-sm-flex align-items-center text-center text-sm-start"><a class="d-inline-block flex-shrink-0 mx-auto me-sm-4" href="{% url 'ecomapp:clientproductdetail' product.product.title product.product.slug %}" target="_blank"><img src="{{product.product.display_image.url}}" width="160" alt="{{product.product.title}}"></a>
+                  <div class="pt-2">
+                    <h3 class="product-title fs-base mb-2"><a href="{% url 'ecomapp:clientproductdetail' product.product.title product.product.slug %}" target="_blank" class="fit-title1">{{product.product.title|capfirst}}</a></h3>
+                    <!-- <div class="fs-sm"><span class="text-muted me-2">Size:</span>8.5</div> -->
+                    <!-- <div class="fs-sm"><span class="text-muted me-2">Color:</span>White &amp; Blue</div> -->
+                    <div class="fs-lg text-accent pt-2">€ {{product.rate|intcomma}}</div>
+                  </div>
+                </div>
+                <div class="pt-2 pt-sm-0 ps-sm-3 mx-auto mx-sm-0 text-center text-sm-start" style="max-width: 9rem;">
+                  <div class="form-group">
+                    <label class="form-label" for="quantity1">Quantity</label>
+                    <input class="form-control quantity_input_cart" data-id="{{product.id}}" type="number" min="1" value="{{product.quantity}}">
+                  </div>
+                  <button class="btn btn-link px-0 text-danger remove-cart-product" data-id="{{product.id}}" data-href="{% url 'ecomapp:ajaxcustomermanagecart' %}" type="button"><i class="ci-close-circle me-2"></i><span class="fs-sm">Remove</span></button>
+                </div>
+              </div>
+              {% endfor %}
+              {% else %}
+              <div style="" class="text-center py-3 w-100 my-3">
+                <img class="d-inline-block mb-4" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACcCAIAAAB3FTesAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQ1IDc5LjE2MzQ5OSwgMjAxOC8wOC8xMy0xNjo0MDoyMiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTkgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NDMxMDBDQzcwRTEyMTFFQTlDN0JDNTAzRUUyMzIxMDMiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NDMxMDBDQzgwRTEyMTFFQTlDN0JDNTAzRUUyMzIxMDMiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDozMkIwRDVENDBFMEYxMUVBOUM3QkM1MDNFRTIzMjEwMyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0MzEwMENDNjBFMTIxMUVBOUM3QkM1MDNFRTIzMjEwMyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pk3kXrQAABTwSURBVHja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" alt="Empty cart" width="65">
+                <p class="fs-sm text-muted mb-0">Your cart is currently empty</p>
+              </div>
+              {% endif %}
+              {% comment %}
+              <!-- Item-->
+              <div class="d-sm-flex justify-content-between align-items-center my-2 pb-3 border-bottom">
+                <div class="d-block d-sm-flex align-items-center text-center text-sm-start"><a class="d-inline-block flex-shrink-0 mx-auto me-sm-4" href="shop-single-v1.html"><img src="{% static 'customstatic/dist/img/shop/cart/02.jpg' %}" width="160" alt="Product"></a>
+                  <div class="pt-2">
+                    <h3 class="product-title fs-base mb-2"><a href="shop-single-v1.html">TH Jeans City Backpack</a></h3>
+                    <div class="fs-sm"><span class="text-muted me-2">Brand:</span>Tommy Hilfiger</div>
+                    <div class="fs-sm"><span class="text-muted me-2">Color:</span>Khaki</div>
+                    <div class="fs-lg text-accent pt-2">€ 79.<small>50</small></div>
+                  </div>
+                </div>
+                <div class="pt-2 pt-sm-0 ps-sm-3 mx-auto mx-sm-0 text-center text-sm-start" style="max-width: 9rem;">
+                  <label class="form-label" for="quantity2">Quantity</label>
+                  <input class="form-control" type="number" id="quantity2" min="1" value="1">
+                  <button class="btn btn-link px-0 text-danger" type="button"><i class="ci-close-circle me-2"></i><span class="fs-sm">Remove</span></button>
+                </div>
+              </div>
+              <!-- Item-->
+              <div class="d-sm-flex justify-content-between align-items-center my-2 pb-3 border-bottom">
+                <div class="d-block d-sm-flex align-items-center text-center text-sm-start"><a class="d-inline-block flex-shrink-0 mx-auto me-sm-4" href="shop-single-v1.html"><img src="{% static 'customstatic/dist/img/shop/cart/03.jpg' %}" width="160" alt="Product"></a>
+                  <div class="pt-2">
+                    <h3 class="product-title fs-base mb-2"><a href="shop-single-v1.html">3-Color Sun Stash Hat</a></h3>
+                    <div class="fs-sm"><span class="text-muted me-2">Brand:</span>The North Face</div>
+                    <div class="fs-sm"><span class="text-muted me-2">Color:</span>Pink / Beige / Dark blue</div>
+                    <div class="fs-lg text-accent pt-2">€ 22.<small>50</small></div>
+                  </div>
+                </div>
+                <div class="pt-2 pt-sm-0 ps-sm-3 mx-auto mx-sm-0 text-center text-sm-start" style="max-width: 9rem;">
+                  <label class="form-label" for="quantity3">Quantity</label>
+                  <input class="form-control" type="number" id="quantity3" min="1" value="1">
+                  <button class="btn btn-link px-0 text-danger" type="button"><i class="ci-close-circle me-2"></i><span class="fs-sm">Remove</span></button>
+                </div>
+              </div>
+              <!-- Item-->
+              <div class="d-sm-flex justify-content-between align-items-center my-2 pb-3 border-bottom">
+                <div class="d-block d-sm-flex align-items-center text-center text-sm-start"><a class="d-inline-block flex-shrink-0 mx-auto me-sm-4" href="shop-single-v1.html"><img src="{% static 'customstatic/dist/img/shop/cart/04.jpg' %}" width="160" alt="Product"></a>
+                  <div class="pt-2">
+                    <h3 class="product-title fs-base mb-2"><a href="shop-single-v1.html">Cotton Polo Regular Fit</a></h3>
+                    <div class="fs-sm"><span class="text-muted me-2">Size:</span>42</div>
+                    <div class="fs-sm"><span class="text-muted me-2">Color:</span>Light blue</div>
+                    <div class="fs-lg text-accent pt-2">€ 9.<small>00</small></div>
+                  </div>
+                </div>
+                <div class="pt-2 pt-sm-0 ps-sm-3 mx-auto mx-sm-0 text-center text-sm-start" style="max-width: 9rem;">
+                  <label class="form-label" for="quantity4">Quantity</label>
+                  <input class="form-control" type="number" id="quantity4" min="1" value="1">
+                  <button class="btn btn-link px-0 text-danger" type="button"><i class="ci-close-circle me-2"></i><span class="fs-sm">Remove</span></button>
+                </div>
+              </div>
+              {% endcomment %}
+              {% if cart %}
+              {% if cart.cartproduct_set.all %}
+              <div class="d-sm-flex justify-content-between align-items-center my-2 pb-3 border-bottom">
+                <button class="btn btn-outline-accent d-block w-100 mt-4" id="update_cart" type="button"><i class="ci-loading fs-base me-2"></i>Update cart</button>
+              </div>
+              {% endif %}
+              {% endif %}
+            </div>
+          </section>
+          <!-- Sidebar-->
+          <aside class="col-lg-4 pt-4 pt-lg-0 ps-xl-5">
+            <div id="client_cart_sideaside">
+              <div class="bg-white rounded-3 shadow-lg p-4">
+                <div class="py-2 px-xl-2">
+                  <div class="text-center mb-4 pb-3 border-bottom">
+                    <h2 class="h6 mb-3 pb-1">Subtotal</h2>
+                    <h5 class="fw-normal">€ {% if cart.subtotal %}{{cart.subtotal|intcomma}}{% else %}0{% endif %}</h5>
+                  </div>
+                  {% comment %}
+                  <div class="mb-3 mb-4">
+                    <label class="form-label mb-3" for="order-comments"><span class="badge bg-info fs-xs me-2">Note</span><span class="fw-medium">Additional comments</span></label>
+                    <textarea class="form-control" rows="6" id="order-comments"></textarea>
+                  </div>
+                  {% endcomment %}
+
+                  <div class="accordion" id="order-options">
+                  {% comment %}
+                    <div class="accordion-item">
+                      <h3 class="accordion-header"><a class="accordion-button" href="#promo-code" role="button" data-bs-toggle="collapse" aria-expanded="true" aria-controls="promo-code">Apply promo code</a></h3>
+                      <div class="accordion-collapse collapse show" id="promo-code" data-bs-parent="#order-options">
+                        <form class="accordion-body needs-validation" method="post" novalidate>
+                          <div class="mb-3">
+                            <input class="form-control" type="text" placeholder="Promo code" required>
+                            <div class="invalid-feedback">Please provide promo code.</div>
+                          </div>
+                          <button class="btn btn-outline-primary d-block w-100" type="submit">Apply promo code</button>
+                        </form>
+                      </div>
+                    </div>
+                  {% endcomment %}
+                  {% comment %}
+                    <div class="accordion-item">
+                      <h3 class="accordion-header"><a class="accordion-button" href="#shipping-estimates" role="button" data-bs-toggle="collapse" aria-expanded="true" aria-controls="shipping-estimates">Shipping estimates</a></h3>
+                      <div class="accordion-collapse collapse show" id="shipping-estimates" data-bs-parent="#order-options">
+                        <div class="accordion-body">
+                          <form class="needs-validation" novalidate>
+                            <div class="mb-3">
+                              <select class="form-select" required>
+                                <option value="">Choose your country</option>
+                                <option value="Australia">Australia</option>
+                                <option value="Belgium">Belgium</option>
+                                <option value="Canada">Canada</option>
+                                <option value="Finland">Finland</option>
+                                <option value="Mexico">Mexico</option>
+                                <option value="New Zealand">New Zealand</option>
+                                <option value="Switzerland">Switzerland</option>
+                                <option value="United States">United States</option>
+                              </select>
+                              <div class="invalid-feedback">Please choose your country!</div>
+                            </div>
+                            <div class="mb-3">
+                              <select class="form-select" required>
+                                <option value="">Choose your city</option>
+                                <option value="Bern">Bern</option>
+                                <option value="Brussels">Brussels</option>
+                                <option value="Canberra">Canberra</option>
+                                <option value="Helsinki">Helsinki</option>
+                                <option value="Mexico City">Mexico City</option>
+                                <option value="Ottawa">Ottawa</option>
+                                <option value="Washington D.C.">Washington D.C.</option>
+                                <option value="Wellington">Wellington</option>
+                              </select>
+                              <div class="invalid-feedback">Please choose your city!</div>
+                            </div>
+                            <div class="mb-3">
+                              <input class="form-control" type="text" placeholder="ZIP / Postal code" required>
+                              <div class="invalid-feedback">Please provide a valid zip!</div>
+                            </div>
+                            <button class="btn btn-outline-primary d-block w-100" type="submit">Calculate shipping</button>
+                          </form>
+                        </div>
+                      </div>
+                  {% endcomment %}
+                      <div class="accordion-collapse collapse show" id="shipping-estimates" data-bs-parent="#order-options">
+                        <div class="accordion-body">
+                          <h6>Discount: &#160;€ {% if cart.discount %}{{cart.discount|intcomma}}{% else %}0{% endif %}</h6>
+                          <h6>Net-total: &#160;€ {% if cart.nettotal %}{{cart.nettotal|intcomma}}{% else %}0{% endif %}</h6>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% if cart.cartproduct_set.all %}
+                  <a class="btn btn-primary btn-shadow d-block w-100 mt-4" href="{% url 'ecomapp:clientcheckout' %}"><i class="ci-card fs-lg me-2"></i>Proceed to Checkout</a>
+                  {% else %}
+                  <a class="btn btn-primary btn-shadow d-block w-100 mt-4" href="{% url 'ecomapp:clienthome' %}"><i class="ci-cart fs-lg me-2"></i>Shop now</a>
+                  {% endif %}
+                </div>
+              </div>
+              
+            </div>
+          </aside>
+        </div>
+      </div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+  $('body').on('click', '#update_cart', function() {
+    var series = [];
+    var divs = document.querySelectorAll('.quantity_input_cart').forEach(function(el) {
+      var quantity = el.value
+      var cp_id = el.dataset.id
+      var item = quantity + '_%_' + cp_id
+      series.push(item)
+    })
+    $.ajax({
+      url: "{% url 'ecomapp:ajaxcustomerudpatecartproductquantity' %}",
+      method: "POST",
+      data: {
+        series, 'csrfmiddlewaretoken':'{{csrf_token}}', 'c_id': "{{cart.id}}"
+      },
+      success: function(data) {
+        if (data.message == "success"){
+          // toastr.options.closeButton = true;
+          // toastr.options.positionClass = 'toast-top-right';
+          // toastr.options.timeOut = 2000;
+          // toastr.options.extendedTimeOut = 100;
+          // toastr['success']('Updated successfully', 'Success');
+          location.reload()
+          // location.href="{% url 'ecomapp:clientcartdetail' %}"
+          
+        } else if (data.message == 'error_noorder'){
+          location.reload()
+        } else {
+          toastr.options.closeButton = true;
+          toastr.options.positionClass = 'toast-top-right';
+          toastr.options.timeOut = 2000;
+          toastr.options.extendedTimeOut = 100;
+          toastr['error']('Process failed', 'Error');
+        }
+      }
+    })
+  })
+</script>
+{% endblock %}

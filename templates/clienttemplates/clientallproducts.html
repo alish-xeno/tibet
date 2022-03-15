@@ -1,0 +1,113 @@
+{% extends 'clienttemplates/clientbase.html' %}
+{% load static %}
+{% block title %}
+All Products
+{% endblock %}
+{% block shop %}active{% endblock %}
+{% block content %}
+<section class="container pt-md-3 pb-5 mb-md-3 mt-5">
+    <h2 class="h3 text-center">All Product List</h2>
+    <div class="row pt-4 mx-n2">
+      <!-- Product-->
+      {% for product in page_obj %}
+      <div class="col-lg-3 col-md-4 col-sm-6 px-2 mb-4">
+        <div class="card product-card">
+          <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to wishlist"><i class="ci-heart"></i></button><a class="card-img-top d-block overflow-hidden" href="{% url 'ecomapp:clientproductdetail' product.title product.slug %}"><img src="{{product.display_image.url}}" alt="Product" style="height: 280px; width: 100%; object-fit: cover;"></a>
+          <div class="card-body py-2">
+            <h3 class="product-title fs-sm"><a href="{% url 'ecomapp:clientproductdetail' product.title product.slug %}" class="fit-title1">{{product.title|capfirst}}</a></h3>
+            <div class="d-flex justify-content-between">
+              <div class="product-price"><span class="text-accent">€. {{product.selling_price}}</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body card-body-hidden">
+          <button class="btn btn-primary btn-sm d-block w-100 mb-2" type="button"><i class="ci-cart fs-sm me-1"></i>Add to Cart</button>
+          <!-- <div class="text-center"><a class="nav-link-style fs-ms" href="#quick-view" data-bs-toggle="modal"><i class="ci-eye align-middle me-1"></i>Quick view</a></div> -->
+        </div>
+      </div>
+      <hr class="d-sm-none">
+      {% endfor %}
+      </div>
+        <!-- Pagination-->
+        <div class="col-12" style="float: center;"> 
+          <nav class="d-flex justify-content-between pt-2" aria-label="Page navigation">
+            {% if page_obj.has_other_pages %}
+            <ul class="pagination">
+              {% if page_obj.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page=1">First</a>
+              </li>
+              <li>
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" title="previous"><i class="ci-arrow-left me-2"></i> Prev</a>
+              </li>
+              {% else %}
+              <li class="page-item disabled"><a class="page-link">&laquo;</a></li>
+              {% endif %}
+              
+              {% if page_obj.paginator.page_range|length > 10 %}
+              
+              {% for i in page_obj.paginator.page_range %}
+              {% if i > page_obj.number|add:'-15' and i < page_obj.number|add:'-12' %}
+              <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+              {% endfor %}
+              
+              {% if page_obj.number > 4 %}
+              <li><a class="page-link">...</a></li>
+              {% endif %}
+              
+              {% for i in page_obj.paginator.page_range %}
+              {% if i > page_obj.number|add:'-4' and i < page_obj.number %}
+              <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+              {% endfor %}
+              
+              {% for i in page_obj.paginator.page_range %}
+              {% if page_obj.number == i %}
+              <li class="page-item active d-none d-sm-block" aria-current="page"><span class="page-link">{{ i }}<span class="visually-hidden">(current)</span></span></li>
+              {% endif %}
+              {% endfor %}
+              
+              {% for i in page_obj.paginator.page_range %}
+              {% if i > page_obj.number and i < page_obj.number|add:'4' %}
+              <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+              {% endfor %}
+              
+              {% if page_obj.number == page_obj.paginator.page_range|length or page_obj.number == page_obj.paginator.page_range|length|add:'-1' or page_obj.number == page_obj.paginator.page_range|length|add:'-2' or page_obj.number == page_obj.paginator.page_range|length|add:'-3' %}
+              {% else %}
+              <li><a class="page-link">...</a></li>
+              {% endif %}
+              
+              {% for i in page_obj.paginator.page_range %}
+              {% if i > page_obj.number|add:'12' and i < page_obj.number|add:'15' %}
+              <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+              {% endfor %}
+              
+              {% else %}
+              
+              {% for i in page_obj.paginator.page_range %}
+                      {% if page_obj.number == i %}
+                      <li class="page-item active d-none d-sm-block"><span class="page-link">{{ i }}<span class="visually-hidden">(current)</span></span></li>
+                      {% elif i > page_obj.number|add:'-15' and i < page_obj.number|add:'15' %}
+                      <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                      {% endif %}
+                      {% endfor %}
+                      
+                      {% endif %}
+                      
+                      {% if page_obj.has_next %}
+                      <li><a class="page-link" href="?page={{ page_obj.next_page_number }}" title="Next">Next <i class="ci-arrow-right me-2"></i></a></li>
+                      <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+                      {% else %}
+                      <li class="page-item disabled"><a class="page-link">&raquo;</a></li>
+                      {% endif %}
+                    </ul>
+                    {% endif %}
+                  </nav>
+                </div>
+                  <!-- <div class="text-center pt-3"><a class="btn btn-outline-accent" href="shop-grid-ls.html">More products<i class="ci-arrow-right ms-1"></i></a></div> -->
+                </section>
+                {% endblock %}
+                

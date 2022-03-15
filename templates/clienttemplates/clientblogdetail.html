@@ -1,0 +1,172 @@
+{% extends 'clienttemplates/clientbase.html' %}
+{% load static %}
+{% block title %}
+Blog Detail
+{% endblock %}
+{% block blog %}active{% endblock %}
+
+{% block content %}
+    <!-- Page Title (Light)-->
+    <div class="bg-secondary py-4">
+        <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+          <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-start">
+                <li class="breadcrumb-item"><a class="text-nowrap" href="{% url 'ecomapp:clienthome' %}"><i class="ci-home"></i>Home</a></li>
+                <li class="breadcrumb-item text-nowrap"><a href="{% url 'ecomapp:clientbloglist' %}">Blog</a>
+                </li>
+                <li class="breadcrumb-item text-nowrap active" aria-current="page">Detail</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="order-lg-1 pe-lg-4 text-center text-lg-start">
+            <h1 class="h3 mb-0">{{blogdetail}}</h1>
+          </div>
+        </div>
+      </div>
+      <div class="container pb-5">
+        <div class="row pt-5 mt-md-2">
+          <section class="col-lg-8">
+            <!-- Post meta-->
+            <div class="d-flex flex-wrap justify-content-between align-items-center pb-4 mt-n1">
+              <div class="d-flex align-items-center fs-sm mb-2">{% if blogdetail.author %}
+                  <div class="blog-entry-meta-link"><i class="ci-user"></i></div> {{blogdetail.author}}{% endif %}<span class="blog-entry-meta-divider"></span>{{blogdetail.created_at|date}}</div>
+              <div class="fs-sm mb-2"><a class="blog-entry-meta-link text-nowrap" href="#comments" data-scroll><i class="ci-message"></i>{{comments.count}}</a></div>
+            </div>
+            <!-- Gallery-->
+            <div class="gallery row pb-2">
+              <div class="col-sm-12">
+                <a class="rounded-3 mb-grid-gutter">
+                  <img style="height: 400px; width: 100%; object-fit: cover;" src="{{blogdetail.image.url}}">
+                </a>
+              </div>
+              
+            <!-- Post content-->
+            <p>{{blogdetail.content|safe}}</p>
+            </div>
+            
+            {% if request.user.is_authenticated %}
+            <!-- Comments-->
+            <div class="pt-2 mt-5" id="comments">
+              <h2 class="h4">Comments<span class="badge bg-secondary fs-sm text-body align-middle ms-2">{{comments.count}}</span></h2>
+              <!-- comment-->
+              {% for comment in comments %}
+              <div class="d-flex align-items-start py-4 border-bottom"><img class="rounded-circle" src="" width="50" alt="">
+                <div class="ps-3">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="fs-md mb-0">{{comment.user}}</h6>
+                  </div>
+                  <p class="fs-md mb-1">{{comment.text}}</p><span class="fs-ms text-muted"><i class="ci-time align-middle me-2"></i>{{comment.created_at|timesince}}</span>
+                </div> 
+              </div>
+              {% endfor %}
+              <div class="card border-0 shadow mt-2 mb-4">
+                <div class="card-body">
+                  <div class="d-flex align-items-start"><img class="rounded-circle" src="" width="50" alt="">
+                    <form class="w-100 needs-validation ms-3" novalidate>
+                      <div class="mb-3">
+                        <textarea class="form-control" id="commentText" rows="4" placeholder="Write comment..." required></textarea>
+                        <div class="invalid-feedback errorMsg">Please write your comment.</div>
+                      </div>
+                      <button class="btn btn-primary" id="commentSubmit" type="submit">Post comment</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+          </section>
+          <aside class="col-lg-4">
+            <!-- Sidebar-->
+            <div class="offcanvas offcanvas-collapse offcanvas-end border-start ms-lg-auto" id="blog-sidebar" style="max-width: 22rem;">
+              <div class="offcanvas-cap align-items-center shadow-sm">
+                <h2 class="h5 mb-0">Sidebar</h2>
+                <button class="btn-close ms-auto" type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+              </div>
+              <div class="offcanvas-body py-grid-gutter py-lg-1 px-lg-4" data-simplebar data-simplebar-auto-hide="true">
+                <!-- Categories-->
+                <!-- <div class="widget widget-links mb-grid-gutter pb-grid-gutter border-bottom mx-lg-2">
+                  <h3 class="widget-title">Blog categories</h3>
+                  <ul class="widget-list">
+                    <li class="widget-list-item"><a class="widget-list-link d-flex justify-content-between align-items-center" href="#"><span>Online shopping</span><span class="fs-xs text-muted ms-3">18</span></a></li>
+                    <li class="widget-list-item"><a class="widget-list-link d-flex justify-content-between align-items-center" href="#"><span>Fashion</span><span class="fs-xs text-muted ms-3">25</span></a></li>
+                    <li class="widget-list-item"><a class="widget-list-link d-flex justify-content-between align-items-center" href="#"><span>Personal finance</span><span class="fs-xs text-muted ms-3">13</span></a></li>
+                    <li class="widget-list-item"><a class="widget-list-link d-flex justify-content-between align-items-center" href="#"><span>Travel &amp; vacation</span><span class="fs-xs text-muted ms-3">7</span></a></li>
+                    <li class="widget-list-item"><a class="widget-list-link d-flex justify-content-between align-items-center" href="#"><span>Lifestyle</span><span class="fs-xs text-muted ms-3">34</span></a></li>
+                    <li class="widget-list-item"><a class="widget-list-link d-flex justify-content-between align-items-center" href="#"><span>Technology</span><span class="fs-xs text-muted ms-3">6</span></a></li>
+                  </ul>
+                </div> -->
+                <!-- Trending posts-->
+                <div class="widget mb-grid-gutter pb-grid-gutter border-bottom mx-lg-2">
+                  <h3 class="widget-title">Top 10 Trending Blogs</h3>
+                  {% for blog in trending_blogs %}
+                  {% if blog.id != blogdetail.id %}
+                  <div class="d-flex align-items-center mb-3"><a class="flex-shrink-0" href="{% url 'ecomapp:clientblogdetail' blog.slug %}"><img class="rounded" src="{{blog.image.url}}" width="64" alt="Post image"></a>
+                    <div class="ps-3">
+                      <h6 class="blog-entry-title fs-sm mb-0"><a href="{% url 'ecomapp:clientblogdetail' blog.slug %}">{{blog.title}}</a></h6><span class="fs-ms text-muted">by {% if blog.author %}<a class="blog-entry-meta-link">{{blog.author}}{% else %}Anonymous{% endif %}</a></span>
+                    </div>
+                  </div>
+                  {% endif %}
+                  {% endfor %}
+                </div>
+                <!-- Popular tags-->
+                <!-- <div class="widget pb-grid-gutter mx-lg-2">
+                  <h3 class="widget-title">Popular tags</h3><a class="btn-tag me-2 mb-2" href="#">#fashion</a><a class="btn-tag me-2 mb-2" href="#">#gadgets</a><a class="btn-tag me-2 mb-2" href="#">#online shopping</a><a class="btn-tag me-2 mb-2" href="#">#top brands</a><a class="btn-tag me-2 mb-2" href="#">#travel</a><a class="btn-tag me-2 mb-2" href="#">#cartzilla blog</a><a class="btn-tag me-2 mb-2" href="#">#personal finance</a><a class="btn-tag me-2 mb-2" href="#">#tips &amp; tricks</a>
+                </div> -->
+                <!-- Promo banner-->
+                  <!-- <div class="bg-size-cover bg-position-center rounded-3 py-5 mx-lg-2" style="background-image: url(img/blog/banner-bg.jpg);">
+                    <div class="py-5 px-4 text-center">
+                      <h5 class="mb-2">Your Add Banner Here</h5>
+                      <p class="fs-sm text-muted">Hurry up to reserve your spot</p><a class="btn btn-primary btn-shadow btn-sm" href="#">Contact us</a>
+                    </div>
+                  </div> -->
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+      {% if featuredbloglist %}
+      <!-- Related posts-->
+      <div class="bg-secondary py-5">
+        <div class="container py-3">
+          <h2 class="h4 text-center pb-4">Featured Blogs</h2>
+          <!-- <h2 class="h4 text-center pb-4">You may also like</h2> -->
+          <div class="tns-carousel">
+            <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;controls&quot;: false, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1},&quot;500&quot;:{&quot;items&quot;:2, &quot;gutter&quot;: 20},&quot;900&quot;:{&quot;items&quot;:3, &quot;gutter&quot;: 20}, &quot;1100&quot;:{&quot;items&quot;:3, &quot;gutter&quot;: 30}}}">
+              {% for blog in featuredbloglist %}
+              <!-- article-->
+              <article><a class="blog-entry-thumb mb-3" href="{% url 'ecomapp:clientblogdetail' blog.slug %}"><img style="height: 250px; width: 100%; object-fit: contain;" src="{{blog.image.url}}" alt="Post"></a>
+                <div class="d-flex align-items-center fs-sm mb-2">by {% if blog.author %}{{blog.author}}{% else %}Anonymous{% endif %}<span class="blog-entry-meta-divider"></span>{{blog.created_at|date}}</div>
+                <h3 class="h6 blog-entry-title" style="text-align: center;"><a href="{% url 'ecomapp:clientblogdetail' blog.slug %}">{{blog.title}}</a></h3>
+              </article>
+              <!-- article-->
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+{% endblock %}
+{% block js %}
+<script>
+  $(document).ready(function(e){
+    $("body").on('click',"#commentSubmit", function(){
+     $.ajax({
+       method : 'post',
+       data:{
+         "comment":$("#commentText").val(),
+         'csrfmiddlewaretoken':'{{csrf_token}}'
+       },
+       success:function(data){
+         if(data.message == 'success'){
+            location.reload()
+         }
+         else{
+           $(".errorMsg").html(data.message)
+         }
+      }
+     })
+    })
+  })
+</script>
+{% endblock %}

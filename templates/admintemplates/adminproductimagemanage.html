@@ -1,0 +1,370 @@
+{% extends "admintemplates/adminbase.html" %}
+{% load static %}
+{% block title %}
+Product Image Management
+{% endblock %}
+{% block productmains %}
+active
+{% endblock %}
+{% block product %}
+active
+{% endblock %}
+{% block css %}
+<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+<style>
+  .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20rem; }
+  .toggle.ios .toggle-handle { border-radius: 20rem; }
+</style>
+{% comment %}
+<style type="text/css">
+    #loader-wrapper .loader-section {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: #f1f1f2;
+        z-index: 1000;
+    }
+     
+    #loader-wrapper .loader-section.section-left {
+        left: 0;
+    }
+     
+    #loader-wrapper .loader-section.section-right {
+        right: 0;
+    }
+    #loader {
+        z-index: 1001; /* anything higher than z-index: 1000 of .loader-section */
+    }
+   
+    #productobject_displayimage {
+        /*margin: 0 auto;
+        padding-bottom: 50px;
+        width: 80%;
+        max-width: 978px;*/
+    }
+    /* Loaded */
+    .loaded #loader-wrapper .loader-section.section-left {
+        -webkit-transform: translateX(-100%);  /* Chrome, Opera 15+, Safari 3.1+ */
+        -ms-transform: translateX(-100%);  /* IE 9 */
+        transform: translateX(-100%);  /* Firefox 16+, IE 10+, Opera */
+    }
+     
+    .loaded #loader-wrapper .loader-section.section-right {
+        -webkit-transform: translateX(100%);  /* Chrome, Opera 15+, Safari 3.1+ */
+        -ms-transform: translateX(100%);  /* IE 9 */
+        transform: translateX(100%);  /* Firefox 16+, IE 10+, Opera */
+    }
+    .loaded #loader {
+        opacity: 0;
+    }
+    .loaded #loader-wrapper {
+        visibility: hidden;
+    }
+    .loaded #loader {
+        opacity: 0;
+        -webkit-transition: all 0.3s ease-out;
+                transition: all 0.3s ease-out;
+    }
+    .loaded #loader-wrapper .loader-section.section-right,
+    .loaded #loader-wrapper .loader-section.section-left {
+     
+        -webkit-transition: all 0.3s 0.3s ease-out;
+                transition: all 0.3s 0.3s ease-out;
+    }
+    .loaded #loader-wrapper {
+        -webkit-transform: translateY(-100%);
+            -ms-transform: translateY(-100%);
+                transform: translateY(-100%);
+ 
+        -webkit-transition: all 0.3s 0.6s ease-out;
+                transition: all 0.3s 0.6s ease-out;
+    }
+    .loaded #loader-wrapper .loader-section.section-right,
+    .loaded #loader-wrapper .loader-section.section-left {
+     
+        -webkit-transition: all 0.7s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+                    transition: all 0.7s 0.3s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+    }
+    .loaded #loader-wrapper {
+        -webkit-transform: translateY(-100%);
+            -ms-transform: translateY(-100%);
+                transform: translateY(-100%);
+ 
+        -webkit-transition: all 0.3s 1s ease-out;
+                transition: all 0.3s 1s ease-out;
+    }
+</style>
+{% endcomment %}
+<style>
+    .spinner {
+        z-index: 99999999;
+        color: red;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        height:60px;
+        width:60px;
+        margin:0px auto;
+        -webkit-animation: rotation .6s infinite linear;
+        -moz-animation: rotation .6s infinite linear;
+        -o-animation: rotation .6s infinite linear;
+        animation: rotation .6s infinite linear;
+        border-left:6px solid rgba(0,174,239,.15);
+        border-right:6px solid rgba(0,174,239,.15);
+        border-bottom:6px solid rgba(0,174,239,.15);
+        border-top:6px solid rgba(0,174,239,.8);
+        border-radius:100%;
+        }
+
+        @-webkit-keyframes rotation {
+        from {-webkit-transform: rotate(0deg);}
+        to {-webkit-transform: rotate(359deg);}
+        }
+        @-moz-keyframes rotation {
+        from {-moz-transform: rotate(0deg);}
+        to {-moz-transform: rotate(359deg);}
+        }
+        @-o-keyframes rotation {
+        from {-o-transform: rotate(0deg);}
+        to {-o-transform: rotate(359deg);}
+        }
+        @keyframes rotation {
+        from {transform: rotate(0deg);}
+        to {transform: rotate(359deg);}
+        }
+</style>
+{% endblock %}
+{% block content %}
+<div class="block-header py-2">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <h2>
+            	<!-- <a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a>  -->
+            	Product Image Management
+            	<ul class="breadcrumb" style="float: right; font-size: 0.7em;">
+                    <li class="breadcrumb-item"><a href="{% url 'ecomapp:adminhome' %}"><i class="icon-home"></i></a></li>                            
+                    <li class="breadcrumb-item"><a href="{% url 'ecomapp:adminproductlist' %}">Product</a></li>
+	                <li class="breadcrumb-item"><a href="{% url 'ecomapp:adminproductdetail' productobject.id %}">Detail</a></li>
+	                <li class="breadcrumb-item active">Image Manage</li>
+	            </ul>
+            </h2>
+        </div>            
+    </div>
+</div>
+<div class="row clearfix">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="header">
+                <h2>Product Display Image</h2>
+            </div>
+            <div class="body">
+                <div class="row">
+                    <div class="col-md-6" style="padding: 10px 20px; background: #f1f1f2;">
+                        {% comment %}
+                        <div id="loader-wrapper">
+                            <div id="loader"></div>
+                            <div class="loader-section section-left"></div>
+                            <div class="loader-section section-right"></div>
+                        </div>
+                        {% endcomment %}
+                        <div id="overlay" style="background-color:grey;position:absolute;top:0;left:0;height:100%;width:100%;z-index:98;opacity:0.5"></div>
+                        <div class="spinner"></div>
+                        <div id="productobject_displayimage" style="text-align: center;">
+                            <img src="{{productobject.display_image.url}}" style="width: 95%; height: 220px; object-fit: contain;">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <form method="POST" id="form_productdisplayimage">
+                            <label>Choose image and click 'upload' button to update product display image</label>
+                            <br>
+                            <input id="input_displayimage" type="file" name="display_image" class="form-control" accept="image/*">
+                            <br>
+                            <button type="button" id="update_product_display_image" class="btn btn-secondary">Upload</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row clearfix">
+    <div class="col-md-12">
+        <div class="card" style="padding-bottom: 100px;">
+            <div class="header">
+                <h2>Product Images</h2>
+            </div>
+            <div class="body">
+                <!-- <div id="overlay_image" style="background-color:grey;position:absolute;top:0;left:0;height:100%;width:100%;z-index:98;opacity:0.5"></div>
+                <div class="spinner"></div> -->
+                <div class="row" id="productimages_div">
+                    {% for pimage in productobject.productimage_set.all %}
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12" style="padding: 10px 20px;  text-align: center;" class="hover_single_pimage" onmouseover="displayRemove($(this))" onmouseout="hiddenRemove($(this))">
+                        <div style="position: absolute; height: 220px; width: 90%; background-color: rgba(240,240,240,0.5); display: none;" title="Remove Image" class="hover_image_remove">
+                            <div style="position: absolute; height: 1.5em; width: 1.5em; font-size: 1.5em; background: #fafafa; cursor: pointer; top: 5px; right: 5px; z-index: 999;" class="remove_singleimage" data-id="{{pimage.id}}">
+                                <span style="opacity: 2">X</span>
+                            </div>
+                        </div>
+                        <img src="{{pimage.image.url}}" style="width: 100%; background: #f1f1f2; height: 220px; object-fit: contain;">
+                        <figure>Product Image {{forloop.counter}}</figure>
+                        <!-- <p>
+                            <label>Is Featured &nbsp;</label>
+                            <input type="checkbox" data-toggle="toggle" data-id="{{pimage.id}}" id="toggle_is_featured__{{pimage.id}}" class="toggle_is_featured" data-onstyle="success" data-size="xs">
+                        </p> -->
+                    </div>
+                    {% empty %}
+                    <div class="col">
+                        <strong class="text-danger">No Images Yet</strong>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="row mt-5">
+                    <div class="col-md-6">
+                        <label>Choose multiple images and click 'upload' button to add product image</label>
+                        <br>
+                        <input id="input_manyproductimage" type="file" name="image" data-max-file-size="1M" class="form-control" accept="image/*" multiple>
+                        <br>
+                        <button type="button" data-href="{% url 'ecomapp:adminproductimagemanage' productobject.id %}" id="add_productimages" class="btn btn-secondary">Upload</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+<script type="text/javascript">
+    $('#update_product_display_image').on('click', function() {
+        var file = $('#input_displayimage')[0].files[0]
+        var fd = new FormData();
+        if (fd && file){
+            fd.append('image', file);
+            fd.append('productimage', 'display_image');
+            fd.append('csrfmiddlewaretoken', '{{csrf_token}}')
+            $.ajax({
+                method: "POST",
+                data: fd,
+                processData: false,
+                contentType: false,
+                beforeSend: function(){
+                    $('#overlay').css('display', 'block');
+                    $('.spinner').css('display', 'block');
+                },
+                success: function(data) {
+                    $('#overlay').css('display', 'none');
+                    $('.spinner').css('display', 'none');
+                    if (data.message == "success"){
+                        $('#productobject_displayimage').load(' #productobject_displayimage');
+                        $('#input_displayimage').val('')
+                    } else {
+                        alert('error')
+                    }
+                }
+            })
+        }
+    })
+</script>
+<script type="text/javascript">
+    $('#add_productimages').on('click', function() {
+        var url = $(this).data('href');
+        var file = $('#input_manyproductimage')[0].files
+        if (file){
+            var fd = new FormData();
+            var i; 
+            var len = file.length;
+            if (len > 0) {
+                var btn = document.getElementById('add_productimages')
+                btn.innerHTML = "Uploading images..."
+                btn.disabled = true;
+                for (i=0; i < len; i++) {
+                    console.log('jjjjjjj')
+                    file = $('#input_manyproductimage')[0].files[i];
+                    fd.append('image', file);
+                    fd.append('productimage', 'productimage');
+                    fd.append('csrfmiddlewaretoken', '{{csrf_token}}')
+                    $.ajax({
+                        url: url,
+                        method: "POST",
+                        data: fd,
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function(){
+                            $('#overlay').css('display', 'block');
+                            $('.spinner').css('display', 'block');
+                        },
+                        success: function(data) {
+                            setTimeout(function() {
+                                location.reload()
+                            }, 1000);
+                        }
+                    })
+                }
+            } else {
+                alert('errorrrrrrrrr')
+            }
+        } else {
+            alert('error')
+        }
+    })
+</script>
+{% comment %}
+<!-- <script type="text/javascript">
+    $('.toggle_is_featured').on('change', function(e) {
+        e.preventDefault()
+        var id = $(this).attr('id')
+        var img_id = $(this).attr('data-id')
+        $.ajax({
+            data: {
+                img_id
+            },
+            beforeSend: function(){
+                $('.toggle_is_featured').bootstrapToggle('off', true);
+            },
+            success: function() {
+                console.log('sucess')
+                setTimeout(function(){
+                    $('#'+id).bootstrapToggle('on', true);
+                }, 500)
+            }
+        })
+    })
+</script> -->
+{% endcomment %}
+<script type="text/javascript">
+    setTimeout(function() {
+        $('#overlay').css('display', 'none');
+        $('#overlay_image').css('display', 'none');
+        $('.spinner').css('display', 'none');
+    }, 1000)
+</script>
+{% comment %}
+<!-- <script type="text/javascript">
+    setTimeout(function(){
+        // $('body').toggleClass('loaded');
+        $('body').addClass('loaded');
+    }, 1500)
+</script> -->
+{% endcomment %}
+<script type="text/javascript">
+    function displayRemove(x) {
+        x.find(">:first-child").css('display', 'block')
+    }
+    function hiddenRemove(x) {
+        x.find(">:first-child").css('display', 'none')
+    }
+</script>
+<script type="text/javascript">
+    $('body').on('click', '.remove_singleimage', function() {
+        var img_id = $(this).data('id');
+        $.ajax({
+            data: {
+                img_id
+            },
+            success: function() {
+                $('#productimages_div').load(' #productimages_div')
+            }
+        })
+    })
+</script>
+{% endblock %}

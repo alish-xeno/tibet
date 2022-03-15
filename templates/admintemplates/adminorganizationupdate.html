@@ -1,0 +1,180 @@
+{% extends "admintemplates/adminbase.html" %}
+{% load static %}
+{% block title %}
+Organization Detail
+{% endblock %}
+{% block organization %}
+active
+{% endblock %}
+{% block content %}
+<div class="block-header py-2">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <h2>
+            	<!-- <a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a>  -->
+            	Organization Update
+            	<ul class="breadcrumb" style="float: right; font-size: 0.7em;">
+                    <li class="breadcrumb-item"><a href="{% url 'ecomapp:adminhome' %}"><i class="icon-home"></i></a></li>                            
+	                <li class="breadcrumb-item"><a href="{% url 'ecomapp:adminorganizationdetail' %}">Organization</a></li>                            
+	                <li class="breadcrumb-item active">Update</li>
+	            </ul>
+            </h2>
+        </div>            
+    </div>
+</div>
+<div class="row clearfix">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="header">
+                <h2>Organization Update Form</h2>
+                <!-- <span class="text-danger">{{form.errors}}</span> -->
+            </div>
+            <div class="body">
+                <form id="basic-form" method="post" novalidate enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Organization Name *</label>
+                        {{form.name}}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Logo *</label>
+                                {{form.logo}}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Profile Image *</label>
+                                {{form.profile_image}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Slogan</label>
+                        {{form.slogan}}
+                    </div>
+                    <div class="form-group">
+                        <label>Address *</label>
+                        {{form.address}}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Contact No *</label>
+                                {{form.contact_no}}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Alt Contact No</label>
+                                {{form.alt_contact_no}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Email *</label>
+                                {{form.email}}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Alt Email</label>
+                                {{form.alt_email}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Map Location</label>
+                        {{form.map_location}}
+                    </div>
+                    <div class="form-group">
+                        <label>Meta Description</label>
+                        {{form.meta_description}}
+                    </div>
+                    <div class="form-group">
+                        <label>About Us *</label>
+                        {{form.about_us}}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Facebook</label>
+                                {{form.facebook}}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Youtube</label>
+                                {{form.youtube}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Instagram</label>
+                                {{form.instagram}}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Twitter</label>
+                                {{form.twitter}}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Viber</label>
+                                {{form.viber}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Seller Policy *</label>
+                        {{form.seller_policy}}
+                    </div>
+                    <div class="form-group">
+                        <label>Return Policy *</label>
+                        {{form.return_policy}}
+                    </div>
+                    <div class="form-group">
+                        <label>Support Policy *</label>
+                        {{form.support_policy}}
+                    </div>
+                    <div class="form-group">
+                        <label>Privacy Policy *</label>
+                        {{form.privacy_policy}}
+                    </div>
+                    <div class="form-group">
+                        <label>Return Policy For Products</label>
+                        {{form.return_policy_for_products}}
+                    </div>
+                    <div class="form-group">
+                        <label>Terms and Conditions *</label>
+                        {{form.terms_conditions}}
+                    </div>
+                    
+                    <br>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<!-- <script src="{% static 'adminstatic/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.js' %}"></script> -->
+<script src="{% static 'adminstatic/assets/vendor/parsleyjs/js/parsley.min.js' %}"></script>
+<script>
+    $(function() {
+        // validation needs name of the element
+        // $('#food').multiselect();
+
+        // initialize after multiselect
+        $('#basic-form').parsley();
+    });
+</script>
+{% endblock %}

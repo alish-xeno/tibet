@@ -1,0 +1,67 @@
+{% extends "admintemplates/adminbase.html" %}
+{% load static %}
+{% block title %}
+Customer Detail
+{% endblock %}
+{% block user %}
+active
+{% endblock %}
+{% block customer %}
+active
+{% endblock %}
+{% block content %}
+<div class="block-header py-2">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <h2>
+            	<!-- <a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a>  -->
+            	Customer Detail
+            	<ul class="breadcrumb" style="float: right; font-size: 0.7em;">
+                    <li class="breadcrumb-item"><a href="{% url 'ecomapp:adminhome' %}"><i class="icon-home"></i></a></li>                            
+                    <li class="breadcrumb-item"><a href="{% url 'ecomapp:admincustomerlist' %}">Customer</a></li>                            
+	                <li class="breadcrumb-item active">Detail</li>
+	            </ul>
+            </h2>
+        </div>            
+    </div>
+</div>
+<div class="row clearfix">
+        <div class="col-lg-4 col-md-4">
+            <div class="card profile-header" style="height: 300px;">
+                <div class="body">
+                    {% if customerobject.image %}
+                    <div class="profile-image"> <img src="{{customerobject.image.url}}" class="rounded-circle" alt="{{customerobject.name}}" style="width: 100%; height: 200px; object-fit: contain;"> </div>
+                    {% endif %}
+                    <div>
+                        <figure style="text-align: center; margin-top: 5px;">Fig: Profile Image</figure>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 col-md-8">
+            <div class="card" style="height: 300px;">
+                <div class="body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h1 style="font-size: 2em;">{{customerobject.name}}</h1>
+                            <hr>
+                            <br>
+                            <h5>User: <small>{{customerobject.user}}</small></h5>
+                            <h5>Mobile: <small>{{customerobject.mobile}}</small></h5>
+                            <h5>Street address: <small>{{customerobject.street_address}}</small></h5>
+                            <br>
+                            <br>
+                            <a class="btn btn-success btn-sm" href="{% url 'ecomapp:admincustomerupdate' customerobject.id %}">
+                                <i class="fa fa-edit"></i> Update
+                            </a>
+                        </div>
+                    </div>
+                </div>          
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+
+{% endblock %}

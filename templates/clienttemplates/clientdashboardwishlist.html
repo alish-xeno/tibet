@@ -1,0 +1,26 @@
+<div>
+    <h4 class="text-danger">Your wishlist</h4>
+    <br>
+    <div id="dashWishlist">
+        {% for item in wishlist.products.all %}
+        <div class="d-sm-flex justify-content-between mt-lg-4 mb-4 pb-3 pb-sm-2 border-bottom">
+            <div class="d-block d-sm-flex align-items-start text-center text-sm-start"><a class="d-block flex-shrink-0 mx-auto me-sm-4" href="shop-single-v1.html" style="width: 10rem;"><img src="{{item.display_image.url}}" alt="Product"></a>
+                <div class="pt-2">
+                    <h3 class="product-title fs-base mb-2"><a href="shop-single-v1.html">{{item.title}}</a></h3>
+                    <div class="fs-sm"><span class="text-muted me-2">Category:</span>{{item.category}}</div>
+                    <div class="fs-sm"><span class="text-muted me-2">On Sale?:</span>{% if item.on_sale == True %}Yes{% else %}No{% endif %}</div>
+                    <div class="fs-lg text-accent pt-2">€.{{item.selling_price}}</div>
+                </div>
+            </div>
+            <div class="pt-2 ps-sm-3 mx-auto mx-sm-0 text-center">
+                <option class="quantity_input" style="visibility: hidden;" value="1"></option>
+                <button class="btn btn-success btn-sm add-to-cart" data-url="{% url 'ecomapp:ajaxcustomeraddtocart' item.id %}" type="button"><i class="ci-cart fs-sm me-1"></i>Add to Cart</button>
+                <!-- <button class="btn btn-danger btn-sm removeBtn" type="button" data-id = "{{item.id}}"><i class="ci-trash me-2"></i>Remove</button> -->
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+    
+    

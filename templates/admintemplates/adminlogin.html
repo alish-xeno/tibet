@@ -1,0 +1,108 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+
+<head>
+<title>Login :: HimalayanTibet</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="description" content="Lucid Bootstrap 4.1.1 Admin Template">
+<meta name="author" content="WrapTheme, design by: ThemeMakker.com">
+
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<!-- VENDOR CSS -->
+<link rel="stylesheet" href="{% static 'adminstatic/assets/vendor/bootstrap/css/bootstrap.min.css' %}">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+<!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+<!-- <link rel="stylesheet" href="{% static 'adminstatic/assets/vendor/font-awesome/css/font-awesome.min.css' %}"> -->
+
+<link rel="stylesheet" href="{% static 'adminstatic/assets/vendor/chartist/css/chartist.min.css' %}">
+<link rel="stylesheet" href="{% static 'adminstatic/assets/vendor/chartist-plugin-tooltip/chartist-plugin-tooltip.css' %}">
+<link rel="stylesheet" href="{% static 'adminstatic/assets/vendor/toastr/toastr.min.css' %}">
+
+<!-- MAIN CSS -->
+<link rel="stylesheet" href="{% static 'adminstatic/assets/css/main.css' %}">
+<link rel="stylesheet" href="{% static 'adminstatic/assets/css/color_skins.css' %}">
+
+<body class="theme-cyan">
+	<!-- WRAPPER -->
+	<div id="wrapper">
+		<div class="vertical-align-wrap">
+			<div class="vertical-align-middle auth-main">
+				<div class="auth-box">
+                    <div class="top">
+                        <h3>
+                            <span style="color: #df2d44 !important;">H</span style="color: #fff !important">imalayanTibet &nbsp;
+                        </h3>
+                    </div>
+					<div class="card">
+                        <div class="header">
+                            <p class="lead">Admin Login</p>
+                        </div>
+                        <div class="body">
+                            <form class="form-auth-small" action="" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    {{form.email}}
+                                </div>
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    {{form.password}}
+                                </div>
+                                <div>
+                                    {% if error %}
+                                    <p class="f-16">Error Attempt During Login</p>
+                                    <span style="color: rgb(208, 130, 130);">{{error}}</span><br><br>
+                                    {% endif %}
+                                </div>
+                                <!-- <div class="form-group clearfix">
+                                    <label class="fancy-checkbox element-left">
+                                        <input type="checkbox">
+                                        <span>Remember me</span>
+                                    </label>								
+                                </div> -->
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">LOGIN</button>
+                                <!-- <div class="bottom">
+                                    <span class="helper-text m-b-10"><i class="fa fa-lock"></i> <a href="page-forgot-password.html">Forgot password?</a></span>
+                                    <span>Don't have an account? <a href="page-register.html">Register</a></span>
+                                </div> -->
+                            </form>
+                        </div>
+                    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- END WRAPPER -->
+        <!-- Javascript -->
+        <script src="{% static 'adminstatic/assets/bundles/libscripts.bundle.js' %}"></script>
+        <script src="{% static 'adminstatic/assets/bundles/vendorscripts.bundle.js' %}"></script>
+        <script src="{% static 'adminstatic/assets/bundles/knob.bundle.js' %}"></script> <!-- Jquery Knob-->
+        <script src="{% static 'adminstatic/assets/bundles/flotscripts.bundle.js' %}"></script>
+        <!-- flot charts Plugin Js -->
+        <script src="{% static 'adminstatic/assets/vendor/toastr/toastr.js' %}"></script>
+        <script src="{% static 'adminstatic/assets/bundles/mainscripts.bundle.js' %}"></script>
+        <script src="{% static 'adminstatic/assets/js/index.js' %}"></script>
+        {% if messages %}
+        {% for message in messages %}
+        {% if message == "success" %}
+        <script type="text/javascript">
+            toastr.options.closeButton = true;
+            toastr.options.positionClass = 'toast-top-right';
+            toastr['success']('{{message}}');
+        </script>
+        {% elif message == "error" %}
+        <script type="text/javascript">
+            toastr.options.closeButton = true;
+            toastr.options.positionClass = 'toast-top-right';
+            toastr['error']('{{message}}');
+        </script>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+</body>
+
+</html>

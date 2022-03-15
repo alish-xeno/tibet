@@ -1,0 +1,54 @@
+{% extends "admintemplates/adminbase.html" %}
+{% load static %}
+{% load humanize %}
+{% block title %}
+Message Detail
+{% endblock %}
+{% block message %}
+active
+{% endblock %}
+{% block content %}
+<div class="block-header py-2">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <h2>
+            	<!-- <a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a>  -->
+            	Message Detail
+            	<ul class="breadcrumb" style="float: right; font-size: 0.7em;">
+                    <li class="breadcrumb-item"><a href="{% url 'ecomapp:adminhome' %}"><i class="icon-home"></i></a></li>                            
+                    <li class="breadcrumb-item"><a href="{% url 'ecomapp:adminsliderlist' %}">Message</a></li>
+                    <li class="breadcrumb-item active">Detail</li>
+	            </ul>
+            </h2>
+        </div>            
+    </div>
+</div>
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12">
+        <div class="card">
+            <div class="body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 style="font-size: 2em;">{{msgonj}}</h3>
+                        <hr>
+                        <div><label>Email :</label> {{msgonj.email}}</div>
+                        {% if msgonj.contact_no %}
+                        <div><label>Contact No :</label> {{msgonj.contact_no}}</div>
+                        {% endif %}
+                        {% if msgonj.company %}
+                        <div><label>Company :</label> {{msgonj.company}}</div>
+                        {% endif %}
+                        {% if msgonj.subject %}
+                        <div><label>Subject :</label> {{msgonj.subject}}</div>
+                        {% endif %}
+                        <div><label>Details :</label> <br> {{msgonj.description}}</div>
+                    </div>
+                </div>
+            </div>          
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+
+{% endblock %}

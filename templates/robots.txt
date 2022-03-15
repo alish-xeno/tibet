@@ -1,0 +1,14 @@
+User-agent: *
+Disallow: /checkout/
+Disallow: /checkout/payment/
+Disallow: /cart/
+Disallow: /checkout-review/
+Disallow: /checkout-complete/
+Disallow: /signup/
+Disallow: /wishlist/
+Disallow: /ajax/customer/registration/
+Disallow: /ajax/customer/update/cart-products/quantity/
+Disallow: /ajax/customer/manage-cart/
+Disallow: /ajax/customer/add-to-wishlist/
+Disallow: /ajax/create/suscriber/
+Disallow: /dashboard/ajax/

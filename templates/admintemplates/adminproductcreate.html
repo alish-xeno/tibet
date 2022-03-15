@@ -1,0 +1,155 @@
+{% extends "admintemplates/adminbase.html" %}
+{% load static %}
+{% block title %}
+Product Form
+{% endblock %}
+{% block productmains %}
+active
+{% endblock %}
+{% block product %}
+active
+{% endblock %}
+{% block content %}
+<div class="block-header py-2">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <h2>
+            	<!-- <a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a>  -->
+            	Product Form
+            	<ul class="breadcrumb" style="float: right; font-size: 0.7em;">
+                    <li class="breadcrumb-item"><a href="{% url 'ecomapp:adminhome' %}"><i class="icon-home"></i></a></li>                            
+	                <li class="breadcrumb-item"><a href="{% url 'ecomapp:adminproductlist' %}">Product</a></li>                            
+	                <li class="breadcrumb-item active">Form</li>
+	            </ul>
+            </h2>
+        </div>            
+    </div>
+</div>
+<div class="row clearfix">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="header">
+                <h2>Product Form</h2>
+                <span class="text-danger">{{form.errors}}</span>
+            </div>
+            <div class="body">
+                <form id="basic-form" method="post" novalidate enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Title *</label>
+                        {{form.title}}
+                    </div>
+                    <div class="form-group">
+                        <small class="text-danger">ps. change slug with change in title</small> <input type="checkbox" name="slugchange" id="change_slug" checked="checked">
+                        <br>
+                        <label>Slug *</label>
+                        {{form.slug}}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Product Code *</label>
+                                {{form.product_code}}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Display Image *</label>
+                                {{form.display_image}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Category *</label>
+                        {{form.category}}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Marked Price *</label>
+                                {{form.marked_price}}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Selling Price *</label>
+                                {{form.selling_price}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Meta Description</label>
+                        {{form.meta_description}}
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        {{form.description}}
+                    </div>
+                    <div class="form-group">
+                        <label>Return Policy</label>
+                        {{form.return_policy}}
+                    </div>
+                    <div class="form-group">
+                        <label>Warranty</label>
+                        {{form.warranty}}
+                    </div>
+                    <div class="form-group">
+                        <label>On Sale</label>
+                        {{form.on_sale}}
+                    </div>
+                    <div class="form-group">
+                        <label>Is Featured *</label>
+                        {{form.is_featured}}
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<!-- <script src="{% static 'adminstatic/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.js' %}"></script> -->
+<script src="{% static 'adminstatic/assets/vendor/parsleyjs/js/parsley.min.js' %}"></script>
+<script type="text/javascript">
+    document.getElementById('id_product_code').setAttribute('required', 'true');
+</script>
+<script>
+    $(function() {
+        // validation needs name of the element
+        // $('#food').multiselect();
+
+        // initialize after multiselect
+        $('#basic-form').parsley();
+    });
+</script>
+<script type="text/javascript">
+    $("#id_title").on("keyup", function () {
+        if ($('input[type="checkbox"]').prop('checked') == true){
+            var change = 'yes'
+        } else if ($('input[type="checkbox"]').prop('checked') == false){
+            var change = 'no'
+        } else {
+            var change = 'yes'
+        }
+        if (change == 'yes'){
+            var title = $(this).val();
+            title = title.toLowerCase();
+            title = title.replace(/[^a-zA-Z0-9]+/g, '-');
+
+            $("#id_slug").val(title);
+        }
+    });
+</script>
+<script type="text/javascript">
+    $('input[type="checkbox"]').click(function(){
+        if($(this).prop("checked") == true){
+            console.log("Checkbox is checked.");
+        }
+        else if($(this).prop("checked") == false){
+            console.log("Checkbox is unchecked.");
+        }
+    });
+</script>
+{% endblock %}

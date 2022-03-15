@@ -1,0 +1,156 @@
+{% extends 'clienttemplates/clientbase.html' %}
+{% load static %}
+{% block title %}
+Blog List
+{% endblock %}
+{% block blog %}active{% endblock %}
+
+{% block content %}
+    <!-- Page Title (Light)-->
+    <div class="bg-secondary py-4">
+        <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+          <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-start">
+                <li class="breadcrumb-item"><a class="text-nowrap" href="{% url 'ecomapp:clienthome' %}"><i class="ci-home"></i>Home</a></li>
+                <li class="breadcrumb-item text-nowrap"><a href="#">Blog</a>
+                </li>
+                <li class="breadcrumb-item text-nowrap active" aria-current="page">List</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="order-lg-1 pe-lg-4 text-center text-lg-start">
+            <h1 class="h3 mb-0">Blog List</h1>
+          </div>
+        </div>
+      </div>
+      <div class="container pb-5 mb-2 mb-md-4">
+        <!-- Featured posts carousel-->
+        <div class="featured-posts-carousel tns-carousel pt-5">
+          <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 2, &quot;nav&quot;: false, &quot;autoHeight&quot;: true, &quot;responsive&quot;: {&quot;0&quot;:{&quot;items&quot;:1},&quot;700&quot;:{&quot;items&quot;:2, &quot;gutter&quot;: 20},&quot;991&quot;:{&quot;items&quot;:2, &quot;gutter&quot;: 30}}}">
+            {% for blog in featuredbloglist %}
+            <article><a class="blog-entry-thumb mb-3" href="{% url 'ecomapp:clientblogdetail' blog.slug %}"><span class="blog-entry-meta-label fs-sm"><i class="ci-time"></i>{{blog.created_at|time}}</span><img style="width: 100%; height: 350px; object-fit: cover;" src="{{blog.image.url}}" style="height: 280px; width: 100%; object-fit: cover;" alt="Featured post"></a>
+              <div class="d-flex justify-content-between mb-2 pt-1">
+                <h2 class="h5 blog-entry-title mb-0"><a href="{% url 'ecomapp:clientblogdetail' blog.slug %}">{{blog}}</a></h2><a class="blog-entry-meta-link fs-sm text-nowrap ms-3 pt-1" href="{% url 'ecomapp:clientblogdetail' blog.slug %}"><i class="ci-message"></i>{{blog.blogcomment_set.count}}</a>
+              </div>
+              <div class="d-flex align-items-center fs-sm">
+                <i class="ci-user"></i> &nbsp;{% if blog.author %}{{blog.author.ecommerceadmin.name}}{% else %}Anonymous{% endif %}
+              </div>
+            </article>
+            {% endfor %}
+          </div>
+        </div>
+        <hr class="mt-5">
+        <div class="row justify-content-center pt-5 mt-2">
+          <!-- Entries list-->
+          <section class="col-lg-9">
+            <!-- Entry-->
+            {% for blog in bloglist %}
+            <article class="blog-list border-bottom pb-4 mb-5">
+              <div class="blog-start-column">
+                <div class="d-flex align-items-center fs-sm pb-2 mb-1">
+                    <div class="blog-entry-author-ava">
+                      <img src="{{blog.image.url}}" alt="author">
+                    </div>
+                    by {% if blog.author %}{{blog.author.first_name}} {{blog.author.last_name}}{% else %}Anonymous{% endif %}
+                    <span class="blog-entry-meta-divider"></span>
+                    {{blog.created_at|date:"d M Y"}}
+                  </div>
+                <h2 class="h5 blog-entry-title"><a href="{% url 'ecomapp:clientblogdetail' blog.slug %}">{{blog}}</a></h2>
+              </div>
+              <div class="blog-end-column">
+                <a class="blog-entry-thumb mb-3" href="{% url 'ecomapp:clientblogdetail' blog.slug %}">
+                  <img src="{{blog.image.url}}" alt="blogImg" class="img-fluid" style="max-height: 270px; object-fit: cover;">
+                </a>
+                <div class="d-flex justify-content-between mb-1">
+                  <div class="fs-sm mb-2">
+                    <span class="blog-entry-meta-link text-nowrap"><i class="ci-message"></i>{{blog.blogcomment_set.count}}</span>
+                  </div>
+                </div>
+                <p class="fs-sm"></p>{{blog.content|striptags|truncatewords:20}}<a href='{% url "ecomapp:clientblogdetail" blog.slug %}' class='blog-entry-meta-link fw-medium'>[Read more]</a></p>
+              </div>
+            </article>
+            {% endfor %}
+            <!-- Pagination-->
+          <nav class="d-flex justify-content-between pt-2" aria-label="Page navigation">
+              <div class="col-md-12 text-center mt-5">
+                  {% if page_obj.has_other_pages %}
+                  <ul class="pagination" style="text-align: center;">
+                      {% if page_obj.has_previous %}
+                      <li class="page-item">
+                          <a class="page-link" href="?page=1">First</a>
+                      </li>
+                      <li>
+                          <a class="page-link" href="?page={{ page_obj.previous_page_number }}" title="previous"><i class="ci-arrow-left me-2"></i> Prev</a>
+                      </li>
+                      {% else %}
+                      <li class="page-item disabled"><a class="page-link">&laquo;</a></li>
+                      {% endif %}
+
+                      {% if page_obj.paginator.page_range|length > 10 %}
+
+                          {% for i in page_obj.paginator.page_range %}
+                              {% if i > page_obj.number|add:'-15' and i < page_obj.number|add:'-12' %}
+                              <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                              {% endif %}
+                          {% endfor %}
+
+                          {% if page_obj.number > 4 %}
+                          <li><a class="page-link">...</a></li>
+                          {% endif %}
+
+                          {% for i in page_obj.paginator.page_range %}
+                              {% if i > page_obj.number|add:'-4' and i < page_obj.number %}
+                              <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                              {% endif %}
+                          {% endfor %}
+
+                          {% for i in page_obj.paginator.page_range %}
+                              {% if page_obj.number == i %}
+                                  <li class="page-item active d-none d-sm-block" aria-current="page"><span class="page-link">{{ i }}<span class="visually-hidden">(current)</span></span></li>
+                              {% endif %}
+                          {% endfor %}
+
+                          {% for i in page_obj.paginator.page_range %}
+                              {% if i > page_obj.number and i < page_obj.number|add:'4' %}
+                              <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                              {% endif %}
+                          {% endfor %}
+
+                          {% if page_obj.number == page_obj.paginator.page_range|length or page_obj.number == page_obj.paginator.page_range|length|add:'-1' or page_obj.number == page_obj.paginator.page_range|length|add:'-2' or page_obj.number == page_obj.paginator.page_range|length|add:'-3' %}
+                          {% else %}
+                          <li><a class="page-link">...</a></li>
+                          {% endif %}
+
+                          {% for i in page_obj.paginator.page_range %}
+                              {% if i > page_obj.number|add:'12' and i < page_obj.number|add:'15' %}
+                              <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                              {% endif %}
+                          {% endfor %}
+
+                      {% else %}
+
+                          {% for i in page_obj.paginator.page_range %}
+                          {% if page_obj.number == i %}
+                              <li class="page-item active d-none d-sm-block"><span class="page-link">{{ i }}<span class="visually-hidden">(current)</span></span></li>
+                          {% elif i > page_obj.number|add:'-15' and i < page_obj.number|add:'15' %}
+                              <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                          {% endif %}
+                          {% endfor %}
+
+                      {% endif %}
+
+                      {% if page_obj.has_next %}
+                        <li><a class="page-link" href="?page={{ page_obj.next_page_number }}" title="Next">Next <i class="ci-arrow-right me-2"></i></a></li>
+                          <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+                      {% else %}
+                        <li class="page-item disabled"><a class="page-link">&raquo;</a></li>
+                      {% endif %}
+                    </ul>
+                  {% endif %}
+              </div>
+          </nav>
+          </section>
+        </div>
+      </div>
+{% endblock %}

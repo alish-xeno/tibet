@@ -1,0 +1,211 @@
+{% extends "admintemplates/adminbase.html" %}
+{% load static %}
+{% block title %}
+Order Form
+{% endblock %}
+{% block order %}
+active
+{% endblock %}
+{% block content %}
+<div class="block-header py-2">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <h2>
+            	<!-- <a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a>  -->
+            	Order Form
+            	<ul class="breadcrumb" style="float: right; font-size: 0.7em;">
+                    <li class="breadcrumb-item"><a href="{% url 'ecomapp:adminhome' %}"><i class="icon-home"></i></a></li>                            
+	                <li class="breadcrumb-item"><a href="{% url 'ecomapp:adminorderlist' %}">Order</a></li>                            
+	                <li class="breadcrumb-item active">Form</li>
+	            </ul>
+            </h2>
+        </div>            
+    </div>
+</div>
+<div class="row clearfix">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="header">
+                <!-- <h2>Order Form</h2> -->
+                <span class="text-danger">{{form.errors}}</span>
+            </div>
+            <div class="body">
+                <form id="basic-form" method="post" novalidate enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <h4>Basic Information</h4>
+                    <div class="card p-3">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Order *</label>
+                                    <input type="text" name="order-code" disabled class="form-control" value="code_{{object.id}}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Cart *</label>
+                                    <input type="text" name="order-code" disabled class="form-control" value="cart_{{object.cart.id}}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Order Code *</label>
+                                    <input type="text" name="order-code" disabled class="form-control" value="{{object.order_code}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Requested Shipping Date</label>
+                                    {{form.requested_shipping_date}}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Is Guest Checkout</label>
+                                    <input type="text" name="order-code" disabled class="form-control" value="{% if object.is_guest_checkout %}Yes{% else %}No{% endif %}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h4>Receiver Information</h4>
+                    <div class="card p-3">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Receiver Name *</label>
+                                    {{form.name}}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Receiver Mobile *</label>
+                                    {{form.mobile}}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Receiver Email</label>
+                                    {{form.email}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Receiver Region</label>
+                                    {{form.region}}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Receiver City</label>
+                                    {{form.city}}
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Receiver street address *</label>
+                                    {{form.street_address}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h4>Payment Information</h4>
+                    <div class="card p-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Customer Payment Status *</label>
+                                    {{form.customer_payment_status}}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Subtotal *</label>
+                                    {{form.subtotal}}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Discount *</label>
+                                    {{form.discount}}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Total *</label>
+                                    {{form.total}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Shipping Charge</label>
+                                    {{form.shipping_charge}}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Shipping Charge Discount</label>
+                                    {{form.shipping_charge_discount}}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Nettotal *</label>
+                                    {{form.nettotal}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h4>Other Actions</h4>
+                    <div class="card p-3">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Is Completed *</label>
+                                    {{form.is_complete}}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Completed Date *</label>
+                                    {{form.completed_date}}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Order Status *</label>
+                                    {{form.order_status}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Note</label>
+                        {{form.note}}
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<!-- <script src="{% static 'adminstatic/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.js' %}"></script> -->
+<script src="{% static 'adminstatic/assets/vendor/parsleyjs/js/parsley.min.js' %}"></script>
+<script>
+    $(function() {
+        // validation needs name of the element
+        // $('#food').multiselect();
+
+        // initialize after multiselect
+        $('#basic-form').parsley();
+    });
+</script>
+{% endblock %}

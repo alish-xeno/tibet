@@ -1,0 +1,322 @@
+{% extends 'clienttemplates/clientbase.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}
+{{categorydetail.title|capfirst}} Category
+{% endblock %}
+{% block shop %}active{% endblock %}
+{% block content %}
+<div class="page-title-overlap bg-dark pt-4">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-start">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="{% url 'ecomapp:clienthome' %}"><i class="ci-home"></i>Home</a></li>
+            </li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page">category detail</li>
+          </ol>
+        </nav>
+      </div>
+      <div class="order-lg-1 pe-lg-4 text-center text-lg-start">
+        <h1 class="h3 text-light mb-0">{{categorydetail.title|capfirst}} Category</h1>
+      </div>
+    </div>
+</div>
+<div class="container pb-5 mb-2 mb-md-4">
+    <div class="row">
+        <!-- Sidebar-->
+        <aside class="col-lg-3">
+        <!-- Sidebar-->
+        <div class="offcanvas offcanvas-collapse bg-white w-100 rounded-3 shadow-lg py-1" id="shop-sidebar" style="max-width: 22rem;">
+            <div class="offcanvas-cap align-items-center shadow-sm">
+            <h2 class="h5 mb-0">Filters</h2>
+            <button class="btn-close ms-auto" type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body py-grid-gutter px-lg-grid-gutter">
+            <!-- Categories-->
+            <div class="widget widget-categories mb-4 pb-4 border-bottom">
+                <h3 class="widget-title">Categories</h3>
+                <div class="accordion mt-n1" id="shop-categories">
+                    <!-- Shoes-->
+                    {% for root_cat in rootcategory %}
+                    {% if root_cat.category_set.all %}
+                    <div class="accordion-item">
+                        <h3 class="accordion-header"><a class="accordion-button {% if superroot.slug == root_cat.slug %}collapsed{% endif %}{% if categorydetail.slug != root_cat.slug %}collapsed{% endif %}" href="#{{root_cat.slug}}" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="{{root_cat.slug}}">{{root_cat.title|capfirst}}</a></h3>
+                        <div class="accordion-collapse collapse {% if superroot.slug == root_cat.slug %}show{% endif %}{% if categorydetail.slug == root_cat.slug %}show{% endif %}" id="{{root_cat.slug}}" data-bs-parent="#shop-categories">
+                            <div class="accordion-body">
+                                <div class="widget widget-links widget-filter">
+                                <div class="input-group input-group-sm mb-2">
+                                    <input class="widget-filter-search form-control rounded-end searchProductsCategory" data-rootcat="{{root_cat.slug}}" type="text" placeholder="Search" {% if superroot.slug == root_cat.slug %}{% if keyword %}value="{{keyword}}"{% endif %}{% endif %}{% if categorydetail.slug == root_cat.slug %}{% if keyword %}value="{{keyword}}"{% endif %}{% endif %} maxlength="50"><i class="ci-search position-absolute top-50 end-0 translate-middle-y fs-sm me-3"></i>
+                                </div>
+                                <ul class="widget-list widget-filter-list pt-1" data-simplebar data-simplebar-auto-hide="false">
+                                    <li class="widget-list-item widget-filter-item">
+                                        <a class="widget-list-link d-flex justify-content-between align-items-center" href="{% url 'ecomapp:clientcategorydetail' root_cat.slug %}"><span class="widget-filter-item-text">View all</span>
+                                            <!-- <span class="fs-xs text-muted ms-3">{{root_cat.category_set.all.count}}</span> -->
+                                        </a>
+                                    </li>
+                                    {% for subcat in root_cat.category_set.all %}
+                                    <li class="widget-list-item widget-filter-item"><a class="widget-list-link d-flex justify-content-between align-items-center" href="{% url 'ecomapp:clientcategorydetail' subcat.slug %}"><span class="widget-filter-item-text">{{subcat.title|capfirst}}</span><span class="fs-xs text-muted ms-3">{{subcat.product_set.all.count}}</span></a></li>
+                                    {% endfor %}
+                                </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- Price range-->
+            <!-- <div class="widget mb-4 pb-4 border-bottom">
+                <h3 class="widget-title">Price</h3>
+                <div class="range-slider" data-start-min="250" data-start-max="680" data-min="0" data-max="1000" data-step="1">
+                <div class="range-slider-ui"></div>
+                <div class="d-flex pb-1">
+                    <div class="w-50 pe-2 me-2">
+                    <div class="input-group input-group-sm"><span class="input-group-text">$</span>
+                        <input class="form-control range-slider-value-min" type="text">
+                    </div>
+                    </div>
+                    <div class="w-50 ps-2">
+                    <div class="input-group input-group-sm"><span class="input-group-text">$</span>
+                        <input class="form-control range-slider-value-max" type="text">
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div> -->
+            
+            </div>
+        </div>
+        </aside>
+
+        <!-- Content  -->
+        <section class="col-lg-9">
+        <!-- Toolbar-->
+        <div class="d-flex justify-content-center justify-content-sm-between align-items-center pt-2 pb-4 pb-sm-5">
+            <div class="d-flex flex-wrap">
+            <div class="d-flex align-items-center flex-nowrap me-3 me-sm-4 pb-3">
+                <label class="text-light opacity-75 text-nowrap fs-sm me-2 d-none d-sm-block" for="sorting">Sort by:</label>
+                <select class="form-select" id="sort_filter">
+                    <option value="lf_order" {% if sorting == 'lf_order' %}selected{% endif %}>Latest First</option>
+                    <option value="of_order" {% if sorting == 'of_order' %}selected{% endif %}>Oldest First</option>
+                    <option value="lh_order" {% if sorting == 'lh_order' %}selected{% endif %}>Low - High Price</option>
+                    <option value="hl_order" {% if sorting == 'hl_order' %}selected{% endif %}>High - Low Price</option>
+                    <option value="ar_order" {% if sorting == 'ar_order' %}selected{% endif %}>Average Rating</option>
+                    <option value="az_order" {% if sorting == 'az_order' %}selected{% endif %}>A - Z Order</option>
+                    <option value="za_order" {% if sorting == 'za_order' %}selected{% endif %}>Z - A Order</option>
+                </select><span class="fs-sm text-light opacity-75 text-nowrap ms-2 d-none d-md-block">of {{count}} products</span>
+                <!-- <span style="color: white;">Found {{count}} products</span> -->
+            </div>
+            </div>
+            <div class="d-flex pb-3"><a class="nav-link-style nav-link-light me-3" href="{% if productlist.has_previous %}?page={{ productlist.previous_page_number }}{% if keyword %}&keyword={{keyword}}{% endif %}{% else %}#{% endif %}"><i class="ci-arrow-left"></i></a><span class="fs-md text-light">{{productlist.number}} / {{productlist.paginator.page_range|length}}</span><a class="nav-link-style nav-link-light ms-3" href="{% if productlist.has_next %}?page={{ productlist.next_page_number }}{% if keyword %}&keyword={{keyword}}{% endif %}{% else %}#{% endif %}"><i class="ci-arrow-right"></i></a></div>
+            <!-- <div class="d-none d-sm-flex pb-3"><a class="btn btn-icon nav-link-style bg-light text-dark disabled opacity-100 me-2" href="#"><i class="ci-view-grid"></i></a><a class="btn btn-icon nav-link-style nav-link-light" href="shop-list-ls.html"><i class="ci-view-list"></i></a></div> -->
+        </div>
+        <!-- Products grid-->
+        <div class="row mx-n2">
+            {% for product in productlist %}
+            <!-- Product-->
+            <div class="col-md-4 col-sm-6 px-2 mb-4">
+            <div class="card product-card">
+                {% if product.on_sale %}
+                <span class="badge bg-danger badge-shadow">Sale</span>
+                {% endif %}
+                {% if request.user.is_authenticated and request.user.groups.first.name == "Customer" %}
+                {% if product in wishlist.products.all %}
+                <button class="btn-wishlist btn_wishlist_{{product.id}} btn-sm" data-id="{{product.id}}" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="Remove from wishlist">
+                  <i class="ci-heart-circle"></i>
+                </button>
+                {% else %}
+                <button class="btn-wishlist btn_wishlist_{{product.id}} btn-sm" data-id="{{product.id}}" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to wishlist">
+                  <i class="ci-heart"></i>
+                </button>
+                {% endif %}
+                {% else %}
+                <a class="btn-wishlist btn_wishlist_{{product.id}} btn-sm" href="#signin-modal" data-bs-toggle="modal" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to wishlist">
+                  <i class="ci-heart"></i>
+                  </a>
+                {% endif %}
+                <a class="card-img-top d-block overflow-hidden" href="{% url 'ecomapp:clientproductdetail' product.title product.slug %}"><img src="{{product.display_image.url}}" style="width: 100%; height: 250px; object-fit: contain;" alt="{{product.title}}" style="background: transparent;"></a>
+                <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="{% if categorydetail == 'all' %}{% url 'ecomapp:clientcategorydetail' 'all' %}{% else %}{% url 'ecomapp:clientcategorydetail' product.category.slug %}{% endif %}">{{product.category|capfirst}}</a>
+                <h3 class="product-title fs-sm"><a href="{% url 'ecomapp:clientproductdetail' product.title product.slug %}" class="fit-title1">{{product.title|capfirst}}</a></h3>
+                <div class="d-flex justify-content-between">
+                    <div class="product-price">
+                        <span class="text-accent">€. {{product.selling_price|intcomma}}</span>
+                        <!-- <del class="fs-sm text-muted">€. {{product.marked_price}}</del> -->
+                    </div>
+                    <!-- <div class="star-rating"><i class="star-rating-icon ci-star-filled active"></i><i class="star-rating-icon ci-star-filled active"></i><i class="star-rating-icon ci-star-filled active"></i><i class="star-rating-icon ci-star-half active"></i><i class="star-rating-icon ci-star"></i>
+                    </div> -->
+                </div>
+                </div>
+                <div class="card-body card-body-hidden">
+                <!-- <div class="text-center pb-2">
+                    <div class="form-check form-option form-check-inline mb-2">
+                    <input class="form-check-input" type="radio" name="color1" id="white" checked>
+                    <label class="form-option-label rounded-circle" for="white"><span class="form-option-color rounded-circle" style="background-color: #eaeaeb;"></span></label>
+                    </div>
+                    <div class="form-check form-option form-check-inline mb-2">
+                    <input class="form-check-input" type="radio" name="color1" id="blue">
+                    <label class="form-option-label rounded-circle" for="blue"><span class="form-option-color rounded-circle" style="background-color: #d1dceb;"></span></label>
+                    </div>
+                    <div class="form-check form-option form-check-inline mb-2">
+                    <input class="form-check-input" type="radio" name="color1" id="yellow">
+                    <label class="form-option-label rounded-circle" for="yellow"><span class="form-option-color rounded-circle" style="background-color: #f4e6a2;"></span></label>
+                    </div>
+                    <div class="form-check form-option form-check-inline mb-2">
+                    <input class="form-check-input" type="radio" name="color1" id="pink">
+                    <label class="form-option-label rounded-circle" for="pink"><span class="form-option-color rounded-circle" style="background-color: #f3dcff;"></span></label>
+                    </div>
+                </div> -->
+                <div class="d-flex mb-2">
+                    <!-- <select class="form-select form-select-sm me-2">
+                    <option>XS</option>
+                    <option>S</option>
+                    <option>M</option>
+                    <option>L</option>
+                    <option>XL</option>
+                    </select> -->
+                      <input type="number" name="quantity" class="form-control quantity_input" style="display: none;" value="1">
+                    <!-- <button class="btn btn-primary btn-shadow d-block w-100 add-to-cart" data-url="{% url 'ecomapp:ajaxcustomeraddtocart' product.id %}" type="button"><i class="ci-cart fs-lg me-2"></i>Add to Cart</button> -->
+                    <button class="btn btn-primary btn-sm add-to-cart" type="button" data-url="{% url 'ecomapp:ajaxcustomeraddtocart' product.id %}" style="width: 100%;"><i class="ci-cart fs-sm me-1"></i>Add to Cart</button>
+                </div>
+                <!-- <div class="text-center"><a class="nav-link-style fs-ms quick_view" data-href="{% url 'ecomapp:clientproductquickview' product.id %}"><i class="ci-eye align-middle me-1"></i>Quick view</a></div> -->
+                <!-- <div class="text-center"><a class="nav-link-style fs-ms" href="#quick-view" data-bs-toggle="modal"><i class="ci-eye align-middle me-1"></i>Quick view</a></div> -->
+                </div>
+            </div>
+            <hr class="d-sm-none">
+            </div>
+            {% endfor %}
+        </div>
+        <!-- Banner-->
+        <!-- <div class="py-sm-2">
+            <div class="d-sm-flex justify-content-between align-items-center bg-secondary overflow-hidden mb-4 rounded-3">
+            <div class="py-4 my-2 my-md-0 py-md-5 px-4 ms-md-3 text-center text-sm-start">
+                <h4 class="fs-lg fw-light mb-2">Converse All Star</h4>
+                <h3 class="mb-4">Make Your Day Comfortable</h3><a class="btn btn-primary btn-shadow btn-sm" href="#">Shop Now</a>
+            </div><img class="d-block ms-auto" src="{% static 'customstatic/dist/img/shop/catalog/banner.jpg' %}" alt="Shop Converse">
+            </div>
+        </div> -->
+        <!-- Products grid-->
+        
+        <hr class="my-3">
+        <!-- Pagination-->
+        <nav class="d-flex justify-content-between pt-2" aria-label="Page navigation">
+            {% if productlist.has_other_pages %}
+            <ul class="pagination" style="text-align: center;">
+                {% if productlist.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if keyword %}&keyword={{keyword}}{% endif %}{% if category %}&cat={{category}}{% endif %}{% if sorting %}&sorting={{sorting}}{% endif %}">First</a>
+                </li>
+                <li>
+                    <a class="page-link" href="?page={{ productlist.previous_page_number }}{% if keyword %}&keyword={{keyword}}{% endif %}{% if category %}&cat={{category}}{% endif %}{% if sorting %}&sorting={{sorting}}{% endif %}" title="previous">&laquo;</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link">&laquo;</a></li>
+                {% endif %}
+
+                {% if productlist.paginator.page_range|length > 10 %}
+
+                    {% for i in productlist.paginator.page_range %}
+                        {% if i > productlist.number|add:'-15' and i < productlist.number|add:'-12' %}
+                        <li><a class="page-link" href="?page={{ i }}{% if keyword %}&keyword={{keyword}}{% endif %}{% if category %}&cat={{category}}{% endif %}{% if sorting %}&sorting={{sorting}}{% endif %}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if productlist.number > 4 %}
+                    <li><a class="page-link">...</a></li>
+                    {% endif %}
+
+                    {% for i in productlist.paginator.page_range %}
+                        {% if i > productlist.number|add:'-4' and i < productlist.number %}
+                        <li><a class="page-link" href="?page={{ i }}{% if keyword %}&keyword={{keyword}}{% endif %}{% if category %}&cat={{category}}{% endif %}{% if sorting %}&sorting={{sorting}}{% endif %}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% for i in productlist.paginator.page_range %}
+                        {% if productlist.number == i %}
+                            <li class="page-item active"><a class="page-link">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% for i in productlist.paginator.page_range %}
+                        {% if i > productlist.number and i < productlist.number|add:'4' %}
+                        <li><a class="page-link" href="?page={{ i }}{% if keyword %}&keyword={{keyword}}{% endif %}{% if category %}&cat={{category}}{% endif %}{% if sorting %}&sorting={{sorting}}{% endif %}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if productlist.number == productlist.paginator.page_range|length or productlist.number == productlist.paginator.page_range|length|add:'-1' or productlist.number == productlist.paginator.page_range|length|add:'-2' or productlist.number == productlist.paginator.page_range|length|add:'-3' %}
+                    {% else %}
+                    <li><a class="page-link">...</a></li>
+                    {% endif %}
+
+                    {% for i in productlist.paginator.page_range %}
+                        {% if i > productlist.number|add:'12' and i < productlist.number|add:'15' %}
+                        <li><a class="page-link" href="?page={{ i }}{% if keyword %}&keyword={{keyword}}{% endif %}{% if category %}&cat={{category}}{% endif %}{% if sorting %}&sorting={{sorting}}{% endif %}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                {% else %}
+
+                    {% for i in productlist.paginator.page_range %}
+                    {% if productlist.number == i %}
+                        <li class="page-item active"><a class="page-link">{{ i }}</a></li>
+                    {% elif i > productlist.number|add:'-15' and i < productlist.number|add:'15' %}
+                        <li><a class="page-link" href="?page={{ i }}{% if keyword %}&keyword={{keyword}}{% endif %}{% if category %}&cat={{category}}{% endif %}{% if sorting %}&sorting={{sorting}}{% endif %}">{{ i }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+
+                {% endif %}
+
+                {% if productlist.has_next %}
+                  <li><a class="page-link" href="?page={{ productlist.next_page_number }}{% if keyword %}&keyword={{keyword}}{% endif %}{% if category %}&cat={{category}}{% endif %}{% if sorting %}&sorting={{sorting}}{% endif %}" title="Next">&raquo;</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ productlist.paginator.num_pages }}{% if keyword %}&keyword={{keyword}}{% endif %}{% if category %}&cat={{category}}{% endif %}{% if sorting %}&sorting={{sorting}}{% endif %}">Last</a></li>
+                {% else %}
+                  <li class="disabled"><a class="page-link">&raquo;</a></li>
+                {% endif %}
+              </ul>
+            {% endif %}
+        </nav>
+        </section>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+    $('#sort_filter').on('change', function(){
+        var val = $(this).val();
+        var keyword = "{{keyword}}";
+        {% if categorydetail == 'all' %}
+            if (keyword){
+                var href = "{% url 'ecomapp:clientcategorydetail' 'all' %}?page=1&keyword=" + keyword + "&cat=all" + '&sorting=' + val
+            } else {
+                var href = "{% url 'ecomapp:clientcategorydetail' 'all' %}?page=1&cat=all" + '&sorting=' + val
+            }
+        {% else %}
+            if (keyword){
+                var href = "{% url 'ecomapp:clientcategorydetail' categorydetail.slug %}?page=1&keyword=" + keyword + "&cat={{categorydetail.slug}}" + '&sorting=' + val
+            } else {
+                var href = "{% url 'ecomapp:clientcategorydetail' categorydetail.slug %}?page=1&cat={{categorydetail.slug}}" + '&sorting=' + val
+            }
+        {% endif %}
+        location.href = href
+    })
+</script>
+<script>
+  $("body").on("keypress", ".searchProductsCategory", function(e){
+    if(e.which == 13){
+      // alert("enter")
+      var catslug = $(this).data('rootcat')
+      var keyword = $(this).val()
+      var sorting = "{{sorting}}"
+      if(keyword != "" & keyword.length >=3){
+        var href = "{% url 'ecomapp:clientsearch' %}?page=1&keyword=" + keyword + "&cat=" + catslug + '&sorting=' + sorting
+        location.href = href
+      }
+      else{
+        $("#searchError").html("Keyword must contain atleats 3 letters")
+      }
+    }
+
+  })
+</script>
+{% endblock %}
