@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-@7lhbfmh9w$f*4m51%b6t4w6$&v!#ff1wor11=60w0xg8$&0bu
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['46.101.247.103','www.himalayantibet.com','himalayantibet.com', '127.0.0.1']
+ALLOWED_HOSTS = ['167.99.241.99/','www.himalayantibet.com','himalayantibet.com']
 
 
 # Application definition
